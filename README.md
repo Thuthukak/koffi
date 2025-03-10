@@ -1,12 +1,12 @@
 
 ## SET UP
 
-rename .evn.example to .env
-Set up your database configuration
-Run php artisan migrate
-Run nvm run dev (ensure you using node version 20 or newer)
-Run php artisan serve
-Visit application at address. eg http//localhost:8000
+<p>rename .evn.example to .env</p>
+<p>Set up your database configuration</p>
+<p>Run php artisan migrate</p>
+<p>Run nvm run dev (ensure you using node version 20 or newer)</p>
+<p>Run php artisan serve</p>
+<p>Visit application at address. eg http//localhost:8000</p>
 
-Encounter any issues? Run composer install
+<p>Encounter any issues? Run composer install</p>
 
