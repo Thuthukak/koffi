@@ -16,11 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('phoneNumber')->nullable()->unique();
             $table->string('email')->nullable()->unique();
-            $table->string('status')->default('queued'); // in queue, skipped or done cutting
-            $table->string('skipCount')->default(0); // number of times skipped
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamp('bookingSlot');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

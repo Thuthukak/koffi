@@ -13,3 +13,5 @@ Route::get('/services', [ServicesController::class, 'index'])->name('services.in
 
 Route::get('/barbers', [BarberController::class, 'index'])->name('barbers.index');
 
+
+Route::get('/bookings-create', [BookingController::class, 'create'])->name('bookings.create');

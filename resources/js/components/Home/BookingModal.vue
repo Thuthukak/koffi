@@ -27,22 +27,22 @@
           <form @submit.prevent="submitForm">
             <div class="row">
                   <div class="col-md-6 mt-3">
-                    <label for="name">Name</label>
+                    <label for="name" class="form-label">Name</label>
                     <input v-model="form.name" type="text" class="form-control" placeholder="Name">
                   </div>
 
                   <div class="col-md-6 mt-3">
-                    <label for="phone_number">Phone Number</label>
+                    <label for="phone_number" class="form-label">Phone Number (Optional)</label>
                     <input v-model="form.phone_number" type="text" class="form-control" placeholder="Phone Number">
                   </div>
      
                   <div class="col-md-6 mt-3">
-                    <label for="email">Email</label>
+                    <label for="email" class="form-label">Email (Optional)</label>
                     <input v-model="form.email" type="email" class="form-control" placeholder="Email">
                   </div>
                 
                   <div class="col-md-6 mt-3">
-                    <label for="service">Select Service</label>
+                    <label for="service" class="form-label">Select Service</label>
                     <select v-model="form.service" class="border rounded px-3 py-2 w-full">
                       <option value="" disabled>Select a service</option>
                       <option v-for="service in services" :key="service.id" :value="service.id">
@@ -52,7 +52,7 @@
                   </div>
 
                   <div class="col-md-6 mt-3">
-                    <label for="barber">Prefered barber</label>
+                    <label for="barber" class="form-label">Prefered barber</label>
                     <select v-model="form.barber" class="border rounded px-3 py-2 w-full">
                       <option value="" disabled>Select a Barber</option>
                       <option v-for="barber in barbers" :key="barber.id" :value="barber.id">
@@ -124,7 +124,25 @@ export default {
     };
 
     const submitForm = () => {
-      
+      // submit to route /bookings-create
+      axios.post('/bookings-create', form.value)
+        .then(response => {
+          // handle success
+          console.log(response.data);
+          // reset form
+          form.value.name = '';
+          form.value.phone_number = '';
+          form.value.email = '';
+          form.value.service = '';
+          form.value.barber = '';
+          // close modal
+          closeModal();
+        })
+        .catch(error => {
+          // handle error
+          console.log(error.response.data.errors);
+          errorMessages.value = error.response.data.errors;
+        });
     };
 
     return {
