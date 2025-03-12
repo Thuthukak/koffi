@@ -3,15 +3,24 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\BarberController;
+use App\Http\Controllers\BookingController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
+Route::get('/bookings', function () {
+    return view('bookings');
+});
 
 
-Route::get('/barbers', [BarberController::class, 'index'])->name('barbers.index');
 
+Route::prefix('api')->group(function () {
+    Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
+    Route::get('/barbers', [BarberController::class, 'index'])->name('barbers.index');
+    Route::get('/bookings', [BookingController::class, 'index']);
 
-Route::get('/bookings-create', [BookingController::class, 'create'])->name('bookings.create');
+    
+});
+
+Route::post('/book', [BookingController::class, 'create'])->name('book');

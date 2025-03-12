@@ -9,7 +9,7 @@
         <!-- Navigation -->
         <div class="hidden md:flex space-x-6 items-center">
           <a href="/" class="nav-item">Home</a>
-          <a href="#" class="nav-item">Bookings</a>
+          <a href="/bookings" class="nav-item">Bookings</a>
           <a href="/faq" class="nav-item">Grooming</a>
           <a href="/contact-us" class="nav-item">Contact Us</a>
   

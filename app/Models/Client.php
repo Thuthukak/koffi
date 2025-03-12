@@ -12,7 +12,7 @@ use App\Models\Booking;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class client extends Model
+class Client extends Model
 {
     use HasFactory, Notifiable, SoftDeletes;
 

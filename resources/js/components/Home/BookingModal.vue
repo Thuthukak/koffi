@@ -32,8 +32,8 @@
                   </div>
 
                   <div class="col-md-6 mt-3">
-                    <label for="phone_number" class="form-label">Phone Number (Optional)</label>
-                    <input v-model="form.phone_number" type="text" class="form-control" placeholder="Phone Number">
+                    <label for="phoneNumber" class="form-label">Phone Number (Optional)</label>
+                    <input v-model="form.phoneNumber" type="text" class="form-control" placeholder="Phone Number">
                   </div>
      
                   <div class="col-md-6 mt-3">
@@ -42,8 +42,8 @@
                   </div>
                 
                   <div class="col-md-6 mt-3">
-                    <label for="service" class="form-label">Select Service</label>
-                    <select v-model="form.service" class="border rounded px-3 py-2 w-full">
+                    <label for="service_id" class="form-label">Select Service</label>
+                    <select v-model="form.service_id" class="border rounded px-3 py-2 w-full">
                       <option value="" disabled>Select a service</option>
                       <option v-for="service in services" :key="service.id" :value="service.id">
                         {{ service.name }} - {{ service.duration }} mins 
@@ -52,8 +52,8 @@
                   </div>
 
                   <div class="col-md-6 mt-3">
-                    <label for="barber" class="form-label">Prefered barber</label>
-                    <select v-model="form.barber" class="border rounded px-3 py-2 w-full">
+                    <label for="barber_id" class="form-label">Preferred Barber</label>
+                    <select v-model="form.barber_id" class="border rounded px-3 py-2 w-full">
                       <option value="" disabled>Select a Barber</option>
                       <option v-for="barber in barbers" :key="barber.id" :value="barber.id">
                         {{ barber.user.name }}
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 
 export default {
@@ -81,41 +81,19 @@ export default {
     isOpen: Boolean
   },
 
-  mounted() {
-    this.fetchServices();
-    this.fetchBarbers();
-  },
-
-  methods: {
-    async fetchServices() {
-      try {
-        const response = await axios.get("/services");
-        this.services = response.data;
-      } catch (error) {
-        console.error("Error fetching services:", error);
-      }
-    },
-
-    async fetchBarbers() {
-      try {
-        const response = await axios.get("/barbers");
-        this.barbers = response.data;
-      } catch (error) {
-        console.error("Error fetching services:", error);
-      }
-    },
-  },
-
   emits: ["close"],
+  
   setup(props, { emit }) {
     const form = ref({
       name: '',
-      phone_number: '',
+      phoneNumber: '',
       email: '',
-      service: '',
-      barber: '',
+      service_id: '',
+      barber_id: '',
     });
 
+    const services = ref([]);
+    const barbers = ref([]);
     const errorMessages = ref([]);
     const isModalOpen = computed(() => props.isOpen);
 
@@ -123,30 +101,59 @@ export default {
       emit('close');
     };
 
-    const submitForm = () => {
-      // submit to route /bookings-create
-      axios.post('/bookings-create', form.value)
-        .then(response => {
-          // handle success
-          console.log(response.data);
-          // reset form
-          form.value.name = '';
-          form.value.phone_number = '';
-          form.value.email = '';
-          form.value.service = '';
-          form.value.barber = '';
-          // close modal
-          closeModal();
-        })
-        .catch(error => {
-          // handle error
-          console.log(error.response.data.errors);
-          errorMessages.value = error.response.data.errors;
-        });
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get("/api/services");
+        services.value = response.data;
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
     };
+
+    const fetchBarbers = async () => {
+      try {
+        const response = await axios.get("/api/barbers");
+        barbers.value = response.data;
+      } catch (error) {
+        console.error("Error fetching barbers:", error);
+      }
+    };
+
+    const submitForm = async () => {
+      try {
+        const response = await axios.post('/book', form.value);
+        
+        console.log(response.data);
+
+        // Reset form
+        form.value = {
+          name: '',
+          phoneNumber: '',
+          email: '',
+          service_id: '',
+          barber_id: '',
+        };
+
+        // Close modal
+        closeModal();
+      } catch (error) {
+        if (error.response && error.response.data.errors) {
+          errorMessages.value = Object.values(error.response.data.errors).flat();
+        } else {
+          console.error("Error submitting form:", error);
+        }
+      }
+    };
+
+    onMounted(() => {
+      fetchServices();
+      fetchBarbers();
+    });
 
     return {
       form,
+      services,
+      barbers,
       errorMessages,
       isModalOpen,
       closeModal,
