@@ -14,6 +14,10 @@
           <a href="/contact-us" class="nav-item">Contact Us</a>
   
           <!-- Auth Buttons -->
+          <a href="/admin/auth" class="bg-blue-500 px-4 py-2 rounded text-white">
+            Barber Login
+          </a>
+
           <!-- <button @click="openLoginModal" class="bg-blue-500  px-4 py-2 rounded-md">
             Login
           </button>
