@@ -15,15 +15,15 @@ Route::prefix('admin')->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('/auth', function () {return view('admin.auth');})->name('admin.auth');
         
-        Route::post('/register', [AuthController::class, 'register']);
-        Route::post('/login', [AuthController::class, 'login']);
-        Route::post('/password/forgot', [PasswordResetController::class, 'sendResetLink']);
-        Route::post('/password/reset', [PasswordResetController::class, 'reset']);
     });
     
     Route::middleware('auth')->group(function () {
         Route::get('/dashboard',[DashboardController::class, 'index'])->name('admin.dashboard');
-        Route::post('/logout', [AuthController::class, 'logout']);
+        
+
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 });
 
@@ -37,7 +37,9 @@ Route::middleware('guest')->group(function () {
 });
 
 
-
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 
 Route::prefix('api')->group(function () {
@@ -48,3 +50,4 @@ Route::prefix('api')->group(function () {
     
 });
 
+require __DIR__.'/auth.php';

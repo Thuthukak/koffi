@@ -24,10 +24,14 @@
                   <label class="form-label">Password</label>
                   <input v-model="form.password" type="password" class="form-control">
                 </div>
-  
-                <!-- Forgot Password (Only in login mode) -->
+
+                <div v-if="!isLogin" class="mb-3">
+                <label class="form-label">Confirm Password</label>
+                  <input v-model="form.password_confirmation" type="password" class="form-control">
+                </div>
+                              <!-- Forgot Password (Only in login mode) -->
                 <div v-if="isLogin" class="mb-3 text-end">
-                  <a href="/admin/forgot-password" class="text-decoration-none text-primary">Forgot Password?</a>
+                  <a href="forgot-password" class="text-decoration-none text-primary">Forgot Password?</a>
                 </div>
   
                 <!-- Extra fields for registration -->
@@ -72,6 +76,7 @@
       const form = ref({
         email: "",
         password: "",
+        password_confirmation: "",
         name: "",
         phone: ""
       });
@@ -82,7 +87,7 @@
   
       const handleSubmit = async () => {
         try {
-          const endpoint = isLogin.value ? "/admin/login" : "/admin/register";
+          const endpoint = isLogin.value ? "/login" : "/register";
           const response = await axios.post(endpoint, form.value);
           console.log(response.data);
           // Handle successful login or registration (e.g., redirect)
