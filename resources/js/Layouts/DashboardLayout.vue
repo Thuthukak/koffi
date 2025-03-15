@@ -1,8 +1,8 @@
 <template>
     <div class="flex h-screen bg-gray-100">
-      <DashSidebar />
+      <Sidebar />
       <div class="flex-1 flex flex-col">
-        <DashNavbar />
+        <Navbar />
         <main class="p-6">
           <slot />
         </main>
@@ -11,11 +11,12 @@
   </template>
   
   <script>
-  import DashSidebar from "@/components/Admin/Dashboard/Sidebar.vue";
-  import DashNavbar from "@/components/Admin/Dashboard/Navbar.vue";
+  import Sidebar from "../components/Admin/Sidebar.vue";
+  import Navbar from "../components/Admin/Navbar.vue";
+
   
   export default {
     name: 'DashboardLayout',
-    components: { DashSidebar, DashNavbar },
+    components: { Sidebar, Navbar },
   };
   </script>

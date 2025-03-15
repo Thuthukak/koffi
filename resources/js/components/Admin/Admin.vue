@@ -86,15 +86,23 @@
       };
   
       const handleSubmit = async () => {
-        try {
-          const endpoint = isLogin.value ? "/login" : "/register";
-          const response = await axios.post(endpoint, form.value);
-          console.log(response.data);
-          // Handle successful login or registration (e.g., redirect)
-        } catch (error) {
-          console.error("Error:", error);
-        }
+          try {
+              const endpoint = isLogin.value ? "/login" : "/register";
+              const response = await axios.post(endpoint, form.value);
+              
+              console.log(response.data);
+
+              // Redirect to the appropriate page after login/register
+              if (isLogin.value) {
+                  window.location.href = "/admin/dashboard"; // Ensure Laravel loads the correct Blade template
+              } else {
+                  window.location.href = "/admin/dashboard"; // Adjust this based on your registration flow
+              }
+          } catch (error) {
+              console.error("Error:", error);
+          }
       };
+
   
       return {
         isLogin,

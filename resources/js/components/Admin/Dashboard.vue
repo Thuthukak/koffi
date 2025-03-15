@@ -1,15 +1,15 @@
 <template>
-    <div>
-        <h1>Admin Dashboard</h1>
-    </div>
-</template>
+    <DashboardLayout>
+      <h1 class="text-2xl font-bold">Welcome to the Dashboard</h1>
+    </DashboardLayout>
+  </template>
+  
+  <script>
+  import DashboardLayout from "../../Layouts/DashboardLayout.vue";
 
-<script>
-export default {
-    name: 'Dashboard',
-};
-</script>
-
-<style scoped>
-/* Add styles if necessary */
-</style>
+  
+  export default {
+    components: { DashboardLayout },
+  };
+  </script>
+  
