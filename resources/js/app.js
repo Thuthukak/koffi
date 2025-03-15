@@ -7,7 +7,9 @@ import Bookings from './components/Home/Bookings.vue';
 import Admin from './components/Admin/Admin.vue';
 import Dashboard from './components/Admin/Dashboard.vue'; 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";  
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"; 
+import router from './router'; 
+
 
 import { faBars, 
         faMoon, 
@@ -17,7 +19,8 @@ import { faBars,
         faBell, 
         faCog, 
         faHome, 
-        faSignOutAlt 
+        faSignOutAlt,
+        faCalendarAlt,
     } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faBars, 
@@ -28,7 +31,8 @@ library.add(faBars,
             faBell, 
             faCog, 
             faHome, 
-            faSignOutAlt);
+            faSignOutAlt,
+            faCalendarAlt);
 
 
 
@@ -39,5 +43,6 @@ app.component('Bookings', Bookings);
 app.component('Admin', Admin);
 app.component('Dashboard', Dashboard);
 app.component("font-awesome-icon", FontAwesomeIcon);
+app.use(router);
 
 app.mount('#app');

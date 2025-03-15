@@ -1,80 +1,70 @@
 <template>
-    <aside class="w-64 bg-gray-900 text-white p-5 h-screen flex flex-col">
-      <!-- Logo Section -->
-      <div class="flex items-center gap-3 mb-6">
-        <div class="bg-indigo-500 text-white w-10 h-10 flex items-center justify-center rounded-lg">
-          <span class="text-lg font-bold">DS</span>
-        </div>
-        <h1 class="text-lg font-semibold">DesignSeal</h1>
+  <aside class="bg-dark text-white vh-100 d-flex flex-column p-3">
+    <!-- Logo Section -->
+    <div class="d-flex align-items-center gap-3 mb-4">
+      <div class="bg-primary text-white d-flex align-items-center justify-content-center rounded-lg" style="width: 40px; height: 40px;">
+        <span class="fw-bold">KFI</span>
       </div>
-  
-      <!-- Navigation linkss -->
-      <ul class="flex-grow">
-        <li class="mb-4">
-          <a href="/admin/dashboard" class="flex items-center gap-3 p-3 rounded-lg hover:bg-indigo-600">
-            <font-awesome-icon :icon="['fas', 'home']" />
-            <span>Dashboard</span>
-          </a>
-        </li>
-        <li class="mb-4">
-          <a href="/admin/onboarding" class="flex items-center gap-3 p-3 rounded-lg hover:bg-indigo-600">
-            <font-awesome-icon :icon="['fas', 'folder-open']" />
-            <span>Bookings</span>
-          </a>
-        </li>
-        <li class="mb-4">
-          <a href="/admin/notifications" class="flex items-center gap-3 p-3 rounded-lg hover:bg-indigo-600">
-            <font-awesome-icon :icon="['fas', 'bell']" />
-            <span>Projects</span>
-          </a>
-        </li>
-        <li class="mb-4">
-          <a href="/admin/analytics" class="flex items-center gap-3 p-3 rounded-lg hover:bg-indigo-600">
-            <font-awesome-icon :icon="['fas', 'chart-pie']" />
-            <span>Invoices</span>
-          </a>
-        </li>
-        <li class="mb-4">
-          <a href="/admin/likes" class="flex items-center gap-3 p-3 rounded-lg hover:bg-indigo-600">
-            <font-awesome-icon :icon="['fas', 'heart']" />
-            <span>Settings</span>
-          </a>
-        </li>
-        <li class="mb-4">
-          <a href="/admin/wallets" class="flex items-center gap-3 p-3 rounded-lg hover:bg-indigo-600">
-            <font-awesome-icon :icon="['fas', 'wallet']" />
-            <span>Subscription</span>
-          </a>
-        </li>
-      </ul>
-  
-      <!-- Logout & Settings -->
-      <div>
-        <a href="/logout" class="flex items-center gap-3 p-3 rounded-lg hover:bg-red-600">
-          <font-awesome-icon :icon="['fas', 'sign-out-alt']" />
-          <span>Logout</span>
-        </a>
-      </div>
-    </aside>
-  </template>
-  
-  <script>
-  import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-  
-  
-  export default {
-    name: "Sidebar",
-    components: {
-      FontAwesomeIcon,
-      
-    },
-  };
-  </script>
-  
-  <style scoped>
-  /* Ensure sidebar styles match the reference */
-  aside {
-    min-width: 260px;
-  }
-  </style>
-  
+      <h4 class="m-0">KOFI</h4>
+    </div>
+
+    <!-- Navigation Links -->
+    <ul class="list-group list-group-flush flex-grow-1">
+      <li class="list-group-item bg-transparent border-0">
+        <router-link to="/admin/dashboard" class="d-flex align-items-center text-white p-2 rounded hover-effect">
+          <font-awesome-icon :icon="['fas', 'home']" class="me-2" />
+          Dashboard
+        </router-link>
+      </li>
+      <li class="list-group-item bg-transparent border-0">
+        <router-link to="/admin/bookings" class="d-flex align-items-center text-white p-2 rounded hover-effect">
+          <font-awesome-icon :icon="['fas', 'calendar-alt']" class="me-2" />
+          Bookings
+        </router-link>
+      </li>
+      <li class="list-group-item bg-transparent border-0">
+        <router-link to="/admin/settings" class="d-flex align-items-center text-white p-2 rounded hover-effect">
+          <font-awesome-icon :icon="['fas', 'cog']" class="me-2" />
+          Settings
+        </router-link>
+      </li>
+    </ul>
+
+    <!-- Logout -->
+    <div>
+      <router-link to="/logout" class="d-flex align-items-center text-white p-2 rounded hover-effect text-danger">
+        <font-awesome-icon :icon="['fas', 'sign-out-alt']" class="me-2" />
+        Logout
+      </router-link>
+    </div>
+  </aside>
+</template>
+
+<script>
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+export default {
+  name: "Sidebar",
+  components: {
+    FontAwesomeIcon,
+  },
+};
+</script>
+
+<style scoped>
+/* Sidebar takes full height */
+aside {
+  width: 260px;
+}
+
+/* Hover effect for links */
+.hover-effect {
+  display: block;
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.hover-effect:hover {
+  background-color: lightblue;
+}
+</style>
