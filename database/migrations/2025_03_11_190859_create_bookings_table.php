@@ -23,7 +23,7 @@ return new class extends Migration
             $table->enum('status', ['queued', 'in-progress', 'completed', 'skipped', 're-booked', 'no-show',])->default('queued');
             $table->timestamp('start_time')->nullable();
             $table->integer('skipCount')->default(0); // number of times skipped
-            $table->softDeletes(); 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

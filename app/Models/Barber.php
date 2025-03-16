@@ -13,7 +13,7 @@ class Barber extends Model
 
     protected $fillable = [
         'user_id',
-        'phone',
+        'phoneNumber',
         'bio',
         'experience',
         'rating'
