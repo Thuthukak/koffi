@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use app\Models\Booking;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -14,10 +15,6 @@ class Reminder extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
-    {
-        //
-    }
 
     /**
      * Get the notification's delivery channels.
@@ -32,12 +29,17 @@ class Reminder extends Notification
     /**
      * Get the mail representation of the notification.
      */
+    public function __construct(public Booking $booking) {}
+
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+            ->subject('Booking Reminder - Tomorrow at '.$this->booking->bookingSlot->format('H:i'))
+            ->line('Reminder for your booking:')
+            ->line('Service: '.$this->booking->service->name)
+            ->line('Barber: '.$this->booking->barber->user->name)
+            ->line('Time: '.$this->booking->bookingSlot->format('H:i'))
+            ->action('View Details', url('/bookings/'.$this->booking->id));
     }
 
     /**
