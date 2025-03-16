@@ -47,11 +47,11 @@ class Booking extends Model
     }
 
     // Add these methods to Booking model
-public function scopeUpcoming($query)
-{
-    return $query->where('bookingSlot', '>', now())
-                 ->whereNotIn('status', ['completed', 'canceled']);
-}
+    public function scopeUpcoming($query)
+    {
+        return $query->where('bookingSlot', '>', now())
+                    ->whereNotIn('status', ['completed', 'canceled']);
+    }
 
 public function getFormattedDateAttribute()
 {

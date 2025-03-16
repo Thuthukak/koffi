@@ -20,7 +20,7 @@ return new class extends Migration
             $table->dateTime('bookingSlot');
             $table->enum('status', ['queued', 'in-progress', 'completed', 'skipped', 're-booked', 'no-show',])->default('queued');
             $table->integer('skipCount')->default(0); // number of times skipped
-            $table->softDeletes(); 
+            $table->softDeletes();
             $table->timestamps();
         });
     }
