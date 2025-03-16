@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('duration'); // Duration in minutes
             $table->timestamps();
         });
-    
     }
 
     /**

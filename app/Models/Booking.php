@@ -6,14 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Barber;
 use App\Models\Service;
 use App\Models\Client;
-use App\Models\Booking;
+use App\Models\Reminder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Booking extends Model
 {
-
-    
     use SoftDeletes;
     
     protected $fillable = [
@@ -25,8 +23,6 @@ class Booking extends Model
         'status',
         'skipCount',
     ];
-
-
 
     public function client()
     {
@@ -42,24 +38,24 @@ class Booking extends Model
     {
         return $this->belongsTo(Service::class);
     }
-    public function numberOfSkips() {
-        return $this->skipCount >= 1;
+    public function incrementSkips() {
         $this->increment('skipCount');
     }
-    //Function to confirm a clients booking
-    public function bookingComfirmation() {
-        $this->notify(new BookingConfirmation($this));
+    
+    public function canRebook() {
+        return $this->skipCount >= 3;
     }
-    //send the client a reminder for thier booking
-    public function sendReminder() {
-        $this->notify(new Reminder($this));
-    }
-    //if a client has been skipped more 3  or more times they have the option to rebook for another slot
-    public function rebook() {
-        $this->update([
-            'skipCount' => 3,
-            'status' => 'queued',
-            'bookingSlot' => now(),
-        ]);
-    }
+
+    // Add these methods to Booking model
+public function scopeUpcoming($query)
+{
+    return $query->where('bookingSlot', '>', now())
+                 ->whereNotIn('status', ['completed', 'canceled']);
+}
+
+public function getFormattedDateAttribute()
+{
+    return $this->bookingSlot->format('D, M j H:i');
+}
+
 }

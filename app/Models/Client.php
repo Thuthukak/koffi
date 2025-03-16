@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Notifications\BookingConfirmation;
 use App\Notifications\Reminder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -22,7 +21,6 @@ class Client extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'id',
         'name',
         'phoneNumber',
         'email',
