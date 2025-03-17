@@ -90,4 +90,12 @@ class BookingController extends Controller
             'booking' => $booking,
         ], 201);
     }
+
+
+    //admin
+
+    public function adminBookings()
+    {
+        return view ('admin.bookings');
+    }
 }

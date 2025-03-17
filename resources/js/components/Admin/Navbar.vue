@@ -46,6 +46,7 @@
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars, faMoon, faSun, faGlobe, faUser, faBell, faCog, faHome, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export default {
   name: "Navbar",
@@ -83,6 +84,7 @@ export default {
       console.log("Go to Settings");
     },
     goHome() {
+      window.location.href = "/";
       console.log("Go to Home");
     },
     logout() {

@@ -4,7 +4,7 @@
       <div class="flex-1 flex flex-col">
         <Navbar />
         <main class="p-6">
-          <slot />
+          <router-view></router-view>
         </main>
       </div>
     </div>
