@@ -75,12 +75,14 @@ export default {
       this.dropdownOpen = !this.dropdownOpen;
     },
     goToProfile() {
+      window.location.href = "/admin/profile";
       console.log("Go to Profile");
     },
     viewNotifications() {
       console.log("View Notifications");
     },
     goToSettings() {
+      window.location.href = "/admin/settings";
       console.log("Go to Settings");
     },
     goHome() {
@@ -88,6 +90,9 @@ export default {
       console.log("Go to Home");
     },
     logout() {
+      axios.post("/logout").then(() => {
+        window.location.href = "/";
+      })
       console.log("Logging out...");
     },
   },

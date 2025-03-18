@@ -20,6 +20,7 @@ Route::prefix('admin')->group(function () {
     
     // Authenticated Middleware (for authenticated admin actions)
     Route::middleware('auth')->group(function () {
+        Route::get('/{any}', function () { return view('admin.dashboard'); })->where('any', '.*');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
         Route::get('/admin/bookings', [BookingController::class, 'adminBookings'])->name('admin.bookings');
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -46,6 +47,8 @@ Route::prefix('api')->group(function () {
     Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
     Route::get('/barbers', [BarberController::class, 'index'])->name('barbers.index');
     Route::get('/bookings', [BookingController::class, 'index']);
+    Route::get('/bookings/data', [BookingController::class, 'adminBookingsData'])->name('admin.bookings.data');
+    
 });
 
 require __DIR__.'/auth.php';

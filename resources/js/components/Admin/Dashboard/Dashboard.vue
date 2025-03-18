@@ -58,6 +58,16 @@
           </div>
         </div>
       </div>
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Live Queue</h5>
+              <!-- Live queue visualization goes here -->
+            </div>
+          </div>
+        </div>
+        </div>
     </div>
 
 </template>

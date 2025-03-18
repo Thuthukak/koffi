@@ -98,4 +98,40 @@ class BookingController extends Controller
     {
         return view ('admin.bookings');
     }
+
+    public function adminBookingsData()
+    {
+        $bookings = Booking::with([
+            'client',
+            'barber.user', // Include the user relationship within barber
+            'service'
+        ])->get();
+    
+        // Transform data to include the barber's name
+        $bookings->transform(function ($booking) {
+            return [
+                'id' => $booking->id,
+                'reference' => $booking->reference,
+                'client' => [
+                    'id' => $booking->client->id,
+                    'name' => $booking->client->name,
+                ],
+                'barber' => [
+                    'id' => $booking->barber->id,
+                    'name' => $booking->barber->user->name ?? 'N/A', // Get barber's name from users table
+                ],
+                'service' => [
+                    'id' => $booking->service->id,
+                    'name' => $booking->service->name,
+                    'duration' => $booking->service->duration,
+                    'price' => $booking->service->price,
+                ],
+                'date' => $booking->date,
+                'status' => $booking->status,
+            ];
+        });
+    
+        return response()->json($bookings);
+    }
+    
 }
