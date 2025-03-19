@@ -9,6 +9,7 @@ use App\Models\Service;
 use App\Models\Barber;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
@@ -55,6 +56,8 @@ class BookingController extends Controller
 
     public function create(Request $request)
     {
+        Log::info('we in the create booking method' .$request);
+        
         $request->validate([
             'name' => 'required|string|max:255',
             'phoneNumber' => 'required|string|max:20',
@@ -72,6 +75,8 @@ class BookingController extends Controller
             ]
         );
 
+        Log::info($client);
+
         // Generate a unique reference code
         $reference = '#' . now()->format('dm') . '-' . Str::random(4);
 
@@ -84,7 +89,7 @@ class BookingController extends Controller
             'status' => 'queued',
             'skipCount' => 0,
         ]);
-
+        Log::info($booking);
         return response()->json([
             'message' => 'Booking successfully created!',
             'booking' => $booking,

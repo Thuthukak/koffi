@@ -20,6 +20,11 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function edit ()
+    {
+        
+    }
+
     /**
      * Update the user's profile information.
      */

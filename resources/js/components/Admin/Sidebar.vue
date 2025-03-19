@@ -25,7 +25,7 @@
       <!-- services -->
        <li class="list-group-item bg-transparent border-0">
         <router-link to="/admin/services" class="d-flex align-items-center text-white p-2 rounded hover-effect">
-          <font-awesome-icon :icon="['fas', 'building']" class="me-2" />
+          <font-awesome-icon :icon="['fas', 'cut']" class="me-2" />
           Services
         </router-link>
       </li>
@@ -51,10 +51,16 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import axios from 'axios';
 
+
 export default {
   name: "Sidebar",
   components: {
     FontAwesomeIcon,
+  },
+  data() {
+    return {
+
+    };
   },
   methods: {
     logout() {

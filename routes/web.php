@@ -11,6 +11,7 @@ use App\Http\Controllers\ProfileController;
 
 // Admin Authentication Routes
 Route::prefix('admin')->group(function () {
+
     // Guest Middleware (only for login & register pages)
     Route::middleware('guest')->group(function () {
         Route::get('/auth', function () {
@@ -20,12 +21,13 @@ Route::prefix('admin')->group(function () {
     
     // Authenticated Middleware (for authenticated admin actions)
     Route::middleware('auth')->group(function () {
-        Route::get('/{any}', function () { return view('admin.dashboard'); })->where('any', '.*');
+        Route::get('/{any}', function () { return view('admin.dashboard'); })->where('any', '.*')->name('dashboard.any');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-        Route::get('/admin/bookings', [BookingController::class, 'adminBookings'])->name('admin.bookings');
+        Route::post('/add-service', [ServicesController::class, 'create'])->name('services.create');
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::delete('/home', [DasboardController::class, 'home'])->name('home');
     });
 });
 
@@ -39,8 +41,11 @@ Route::middleware('guest')->group(function () {
         return view('bookings');
     });
 
-    Route::post('/book', [BookingController::class, 'create'])->name('book');
+    
 });
+
+// Authenticated and guest routes
+Route::post('/book', [BookingController::class, 'create'])->name('book');
 
 // API Routes (Public API)
 Route::prefix('api')->group(function () {

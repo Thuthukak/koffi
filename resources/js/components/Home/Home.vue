@@ -4,8 +4,8 @@
     <section class="hero position-relative text-white text-center">
       <div class="banner-image"></div>
       <div class="overlay-content position-absolute top-50 start-50 translate-middle text-center">
-        <h1 class="display-4 fw-bold">Strengthening Advancements in Potential and Excellence</h1>
-        <p class="lead">Promoting growth and development through education, enhanced opportunities, and the connection of talent to the global market</p>
+        <h1 class="display-4 fw-bold">Welcome to Kofi Barber Shop</h1>
+        <p class="lead">Experience the best barber services in the city</p>
         <button @click="openBookingModal" class="btn btn-light btn-lg mt-3">Book Now</button>
       </div>
     </section>

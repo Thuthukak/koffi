@@ -3,7 +3,7 @@
       <!-- booking text on left. book button on right -->
       <div class="d-flex justify-content-between align-items-center">
         <h2 class="mb-4">Services</h2>
-        <button class="btn btn-primary" @click="openBookingModal">Book</button>
+        <button class="btn btn-primary" @click="openServiceAddModal">Add</button>
       </div>
       
   
@@ -26,18 +26,18 @@
         </tbody>
       </table>
     </div>
-    <BookingModal :isOpen="showBookingModal" @close="closeBookingModal" />
+    <ServiceAddModal :isOpen="showServiceAddModal" @close="closeServiceAddModal" />
   </template>
   
   <script>
   import axios from "axios";
-  import BookingModal from "@/components/Home/BookingModal.vue";
+  import ServiceAddModal from "@/components/Admin/Dashboard/ServiceAddModal.vue";
   export default {
-    components: { BookingModal },
+    components: { ServiceAddModal },
     data() {
       return {
-        bookings: [],
-        showBookingModal: false
+        services: [],
+        showServiceAddModal: false
       };
     },
     mounted() {
@@ -52,11 +52,11 @@
           console.error("Error fetching services:", error);
         }
       },
-      openBookingModal() {
-        this.showBookingModal = true;
+      openServiceAddModal() {
+        this.showServiceAddModal = true;
       },
-      closeBookingModal() {
-        this.showBookingModal = false;
+      closeServiceAddModal() {
+        this.showServiceAddModal = false;
       },
     },
   };

@@ -22,9 +22,19 @@ import { faBars,
         faHome, 
         faSignOutAlt,
         faCalendarAlt,
+        faCut,
+        faMapMarkerAlt, faPhone, faEnvelope
     } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faBars, 
+import { faFacebookF, 
+        faTwitter, 
+        faLinkedinIn, 
+        faYoutube,
+        } from '@fortawesome/free-brands-svg-icons';
+
+library.add
+        (       
+            faBars, 
             faMoon, 
             faSun, 
             faGlobe, 
@@ -33,7 +43,14 @@ library.add(faBars,
             faCog, 
             faHome, 
             faSignOutAlt,
-            faCalendarAlt);
+            faCalendarAlt,
+            faCut,
+            faMapMarkerAlt, faPhone, faEnvelope,
+            faFacebookF, 
+            faTwitter, 
+            faLinkedinIn, 
+            faYoutube
+        );
 
 
 
