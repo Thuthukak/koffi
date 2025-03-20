@@ -55,46 +55,159 @@ class BookingController extends Controller
 
 
     public function create(Request $request)
-    {
-        Log::info('we in the create booking method' .$request);
-        
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'phoneNumber' => 'required|string|max:20',
-            'email' => 'required|email|unique:clients,email',
-            'service_id' => 'required|exists:services,id',
-            'barber_id' => 'required|exists:barbers,id',
-        ]);
+{
+    Log::info('we in the create booking method', ['request' => $request->all()]);
+    
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'phoneNumber' => 'required|string|max:20',
+        'email' => 'required|email|unique:clients,email',
+        'service_id' => 'required|exists:services,id',
+        'barber_id' => 'required|exists:barbers,id',
+    ]);
 
-        // Create the client (or find existing one by email)
-        $client = Client::firstOrCreate(
-            ['email' => $request->email],
-            [
-                'name' => $request->name,
-                'phoneNumber' => $request->phoneNumber,
-            ]
-        );
+    // Create or find the client by email
+    $client = Client::firstOrCreate(
+        ['email' => $request->email],
+        [
+            'name' => $request->name,
+            'phoneNumber' => $request->phoneNumber,
+        ]
+    );
 
-        Log::info($client);
+    Log::info('Client created/found', ['client' => $client]);
 
-        // Generate a unique reference code
-        $reference = '#' . now()->format('dm') . '-' . Str::random(4);
+    // Retrieve the selected service to get its duration
+    $service = Service::findOrFail($request->service_id);
 
-        // Create the booking
-        $booking = Booking::create([
-            'client_id' => $client->id,
-            'reference' => $reference,
-            'service_id' => $request->service_id,
-            'barber_id' => $request->barber_id,
-            'status' => 'queued',
-            'skipCount' => 0,
-        ]);
-        Log::info($booking);
-        return response()->json([
-            'message' => 'Booking successfully created!',
-            'booking' => $booking,
-        ], 201);
+    // Generate a unique reference code
+    $reference = '#' . now()->format('dm') . '-' . Str::random(4);
+
+    // Find the last booking for this barber that is still in progress or queued
+    $lastBooking = Booking::where('barber_id', $request->barber_id)
+                  ->whereIn('status', ['queued', 'in-progress'])
+                  ->orderBy('expected_start_time', 'desc')
+                  ->first();
+
+    // Calculate expected start time and time remaining
+    $startTime = $lastBooking
+        ? Carbon::parse($lastBooking->expected_start_time)->addMinutes($service->duration)
+        : now();
+
+    $timeRemaining = $lastBooking
+        ? $lastBooking->time_remaining + $service->duration
+        : 0;
+
+    // Create the booking
+    $booking = Booking::create([
+        'client_id' => $client->id,
+        'reference' => $reference,
+        'service_id' => $request->service_id,
+        'barber_id' => $request->barber_id,
+        'expected_start_time' => $startTime,
+        'time_remaining' => $timeRemaining,
+        'status' => 'queued',
+        'skipCount' => 0,
+    ]);
+
+    Log::info('Booking created', ['booking' => $booking]);
+
+    return response()->json([
+        'message' => 'Booking successfully created!',
+        'booking' => $booking,
+    ], 201);
+}
+
+
+    // skip customer in queue
+
+    public function skipBooking($bookingId)
+{
+    Log::info('we in the skip booking method', ['bookingId' => $bookingId]);
+    
+    $skippedBooking = Booking::findOrFail($bookingId);
+
+    // Check if the customer has reached the max skip limit
+    if ($skippedBooking->skipCount >= 3) {
+        $skippedBooking->update(['status' => 'no-show', 'deleted_at' => now()]);
+    } else {
+        $skippedBooking->increment('skipCount');
+        $skippedBooking->update(['skipped_at' => now()]);
+
+    // Find the next booking in queue
+    $nextBooking = Booking::where('barber_id', $skippedBooking->barber_id)
+        ->where('status', 'queued')
+        ->where('expected_start_time', '>', $skippedBooking->expected_start_time)
+        ->orderBy('expected_start_time', 'asc')
+        ->first();
+
+    if (!$nextBooking) {
+        return response()->json(['message' => 'No one else is in the queue to swap places with.']);
     }
+
+    // Swap places: Update start times and time_remaining
+    $originalStartTime = $skippedBooking->expected_start_time;
+
+    $skippedBooking->update([
+        'expected_start_time' => $nextBooking->expected_start_time,
+        'time_remaining' => $nextBooking->time_remaining,
+        'skipCount' => $skippedBooking->skipCount + 1,
+    ]);
+
+    $nextBooking->update([
+        'expected_start_time' => $originalStartTime,
+        'time_remaining' => max($skippedBooking->time_remaining - $nextBooking->service->duration, 0),
+    ]);
+
+}
+
+    return response()->json(['message' => 'Customer skipped. They have been moved one place down.']);
+}
+
+
+    public function schedule()
+    {
+        $schedules = Booking::where('status', 'queued')
+                    ->where('notification_sent', false)
+                    ->whereRaw("expected_start_time <= NOW() + INTERVAL 15 MINUTE")
+                    ->get();
+
+        foreach ($schedules as $booking) {
+            Notification::send($booking->client, new BookingReminderNotification($booking));
+            $booking->update(['notification_sent' => true]);
+        }
+    
+    }   
+
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+            ->line("Hello {$notifiable->name}, your booking is in 15 minutes!")
+            ->line('Please arrive on time.');
+    }
+
+    //live queue
+    public function liveQueue()
+{
+    $queue = Booking::with('client')
+        ->whereIn('status', ['queued', 'in-progress'])
+        ->orderBy('expected_start_time', 'asc')
+        ->get()
+        ->map(function ($booking) {
+            $expectedStart = Carbon::parse($booking->expected_start_time);
+            $now = Carbon::now();
+            $timeRemaining = $expectedStart->greaterThan($now) ? $now->diffInMinutes($expectedStart) : 0;
+
+            return [
+                'reference' => $booking->reference,
+                'name' => $booking->client->name,
+                'status' => $booking->status,
+                'time_remaining' => $timeRemaining, // Now dynamically calculated
+            ];
+        });
+
+    return response()->json($queue);
+}
 
 
     //admin

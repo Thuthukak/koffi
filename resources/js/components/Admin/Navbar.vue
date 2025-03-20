@@ -86,7 +86,9 @@ export default {
       console.log("Go to Settings");
     },
     goHome() {
-      window.location.href = "/";
+      axios.post("/logout").then(() => {
+        window.location.href = "/";
+      })
       console.log("Go to Home");
     },
     logout() {

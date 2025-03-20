@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-4">
+  <div class="container-fluid mt-4">
     <h1 class="mb-4 fw-bold">Welcome to the Dashboard</h1>
     <div class="row g-4">
       <!-- Queue Overview -->
@@ -59,22 +59,41 @@
       </div>
     </div>
 
+   
     <div class="row mt-4">
       <div class="col-md-6">
         <div class="card shadow-sm overflow-y-auto max-h-96 ">
           <div class="card-body">
-            <h5 class="card-title">Live Queue</h5>
-            <ul>
-              <li
-                v-for="booking in bookings"
-                :key="booking.id"
-                class="p-2 border-b"
-              >
-                <strong>{{ booking.reference }} - {{ booking.client_name }}</strong>
-                <br />
-                Time Remaining: {{ formatTime(booking.timeRemaining) }}
-              </li>
-            </ul>
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="card-title">Live Queue</h5>
+              <div>
+                <div class="btn btn-danger mr-5" @click="clearQueue">Start</div>
+                <div class="btn btn-warning mr-5" @click="skipQueue">Skip</div>
+                <div class="btn btn-success" @click="nextQueue">Next</div> 
+              </div>            
+            </div>
+            <table class="table table-striped mt-5">
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Client</th>
+                  <th>Status</th>
+                  <th>Time Remaining</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="booking in queue" :key="booking.reference">
+                  <td>{{ booking.reference }}</td>
+                  <td>{{ booking.name }}</td>
+                  <td>
+                    <span class="badge" :class="getStatusClass(booking.status)">
+                      {{ booking.status }}
+                    </span>
+                  </td>
+                  <td>{{ formatTime(booking.time_remaining) }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -139,6 +158,7 @@ import DashboardLayout from "../../../Layouts/DashboardLayout.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faUsers, faCalendarCheck, faCheckCircle, faMoneyBillWave } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { ref, onMounted } from "vue";
 
 export default {
   components: { FontAwesomeIcon },
@@ -149,6 +169,7 @@ export default {
       completedServices: 98, // Services completed
       revenue: 7500, // Revenue for the month in Rands
       icons: { faUsers, faCalendarCheck, faCheckCircle, faMoneyBillWave },
+      queue: [],
       bookings: [],
       services: [],
       barbers: [],
@@ -162,6 +183,15 @@ export default {
     };
   },
   methods: {
+
+    async skipQueue() {
+      try {
+        await axios.get("/admin/skip-booking/{bookingId}");
+        this.fetchQueue();
+      } catch (error) {
+        console.error("Error skipping booking:", error);
+      }
+    },
     async fetchBookings() {
       try {
         const response = await axios.get("/api/bookings");
@@ -189,9 +219,36 @@ export default {
       }
     },
 
+    async fetchQueue() {
+      try {
+        const response = await axios.get("/api/queue");
+        this.queue = response.data;
+      } catch (error) {
+        console.error("Error fetching queue:", error);
+      }
+    },
+
     formatTime(minutes) {
-      const roundedMinutes = Math.max(0, Math.round(minutes));
-      return `${Math.floor(roundedMinutes / 60)}h ${roundedMinutes % 60}m`;
+      if (minutes <= 0) return "Now";
+      let hours = Math.floor(minutes / 60);
+      let mins = minutes % 60;
+      return `${hours}h ${mins}m`;
+    },
+
+    getStatusClass(status) {
+      return {
+        "badge-primary": status === "queued",
+        "badge-success": status === "in-progress",
+        "badge-danger": status === "skipped",
+        "badge-secondary": status === "completed",
+      };
+    },
+
+    updateTimeRemaining() {
+      this.queue = this.queue.map((booking) => ({
+        ...booking,
+        time_remaining: Math.max(0, booking.time_remaining - 1),
+      }));
     },
 
     async submitForm() {
@@ -219,8 +276,34 @@ export default {
     this.fetchBookings();
     this.fetchServices();
     this.fetchBarbers();
-    setInterval(this.fetchBookings, 30000);
+    this.fetchQueue();
+    setInterval(this.fetchQueue, 30000);
+    setInterval(this.updateTimeRemaining, 60000);
+
   },
 };
 </script>
+<style scoped>
+.badge {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.badge-primary {
+  background-color: blue;
+  color: white;
+}
+.badge-success {
+  background-color: green;
+  color: white;
+}
+.badge-danger {
+  background-color: red;
+  color: white;
+}
+.badge-secondary {
+  background-color: gray;
+  color: white;
+}
+</style>
 

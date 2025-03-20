@@ -36,10 +36,6 @@
   
   <style scoped>
 
-  .dropdown {
-    @apply relative;
-    
-  }
   .bg-shape-primary{
     background-color: #383838 !important;
   }

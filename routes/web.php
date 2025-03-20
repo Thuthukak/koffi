@@ -27,7 +27,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        Route::delete('/home', [DasboardController::class, 'home'])->name('home');
+        Route::get('/skip-booking/{bookingId}', [BookingController::class, 'skipBooking'])->name('skip.booking');
+        
     });
 });
 
@@ -46,6 +47,9 @@ Route::middleware('guest')->group(function () {
 
 // Authenticated and guest routes
 Route::post('/book', [BookingController::class, 'create'])->name('book');
+// Route::post('/home', [DasboardController::class, 'home'])->name('home');
+
+
 
 // API Routes (Public API)
 Route::prefix('api')->group(function () {
@@ -53,7 +57,7 @@ Route::prefix('api')->group(function () {
     Route::get('/barbers', [BarberController::class, 'index'])->name('barbers.index');
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::get('/bookings/data', [BookingController::class, 'adminBookingsData'])->name('admin.bookings.data');
-    
+    Route::get('/queue', [BookingController::class, 'liveQueue']); 
 });
 
 require __DIR__.'/auth.php';
