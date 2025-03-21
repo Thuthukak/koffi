@@ -22,6 +22,13 @@
           Bookings
         </router-link>
       </li>
+      <!-- services -->
+       <li class="list-group-item bg-transparent border-0">
+        <router-link to="/admin/services" class="d-flex align-items-center text-white p-2 rounded hover-effect">
+          <font-awesome-icon :icon="['fas', 'cut']" class="me-2" />
+          Services
+        </router-link>
+      </li>
       <li class="list-group-item bg-transparent border-0">
         <router-link to="/admin/settings" class="d-flex align-items-center text-white p-2 rounded hover-effect">
           <font-awesome-icon :icon="['fas', 'cog']" class="me-2" />
@@ -32,21 +39,35 @@
 
     <!-- Logout -->
     <div>
-      <router-link to="/logout" class="d-flex align-items-center text-white p-2 rounded hover-effect text-danger">
+      <button @click="logout" class="d-flex align-items-center text-white p-2 rounded hover-effect text-danger">
         <font-awesome-icon :icon="['fas', 'sign-out-alt']" class="me-2" />
         Logout
-      </router-link>
+      </button>
     </div>
   </aside>
 </template>
 
 <script>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import axios from 'axios';
+
 
 export default {
   name: "Sidebar",
   components: {
     FontAwesomeIcon,
+  },
+  data() {
+    return {
+
+    };
+  },
+  methods: {
+    logout() {
+      axios.post('/logout').then(() => {
+        window.location.href = '/login';
+      });
+    },
   },
 };
 </script>

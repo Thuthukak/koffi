@@ -31,6 +31,34 @@
           <button @click="openBookingModal" class="mt-4 p-2 bg-green-500 text-white w-full">Book Now</button>
         </div>
       </div>
+      <!-- temp booking queue -->
+      <div class="row">
+        <div class="col-md-6 mt-4">
+          <h2 class="text-center">Live Booking Queue</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Client</th>
+                  <th>Status</th>
+                  <th>Time Remaining</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="booking in queue" :key="booking.reference">
+                  <td>{{ booking.reference }}</td>
+                  <td>{{ booking.name }}</td>
+                  <td>
+                    <span class="badge" :class="getStatusClass(booking.status)">
+                      {{ booking.status }}
+                    </span>
+                  </td>
+                  <td>{{ formatTime(booking.time_remaining) }}</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
     </section>
   </Layout>
   <BookingModal :isOpen="showBookingModal" @close="closeBookingModal" />
@@ -44,6 +72,49 @@ import BookingModal from "@/components/Home/BookingModal.vue";
 
 export default {
 components: { Layout, BookingModal },
+
+data() {
+  return {
+    queue: [],
+  };
+},
+
+methods: {
+    async fetchQueue() {
+      try {
+        const response = await axios.get("/api/queue");
+        this.queue = response.data;
+      } catch (error) {
+        console.error("Error fetching queue:", error);
+      }
+    },
+    formatTime(minutes) {
+      if (minutes <= 0) return "Now";
+      let hours = Math.floor(minutes / 60);
+      let mins = minutes % 60;
+      return `${hours}h ${mins}m`;
+    },
+    getStatusClass(status) {
+      return {
+        "badge-primary": status === "queued",
+        "badge-success": status === "in-progress",
+        "badge-danger": status === "skipped",
+        "badge-secondary": status === "completed",
+      };
+    },
+    updateTimeRemaining() {
+      this.queue = this.queue.map((booking) => ({
+        ...booking,
+        time_remaining: Math.max(0, booking.time_remaining - 1),
+      }));
+    },
+  },
+  
+  mounted() {
+    this.fetchQueue();
+    setInterval(this.fetchQueue, 30000); // Fetch fresh data every 30s
+    setInterval(this.updateTimeRemaining, 60000); // Decrease time remaining every 1 min
+  },
 
 setup() {
   const bookings = ref([]);
@@ -109,5 +180,25 @@ setup() {
 </script>
 
 <style scoped>
-/* Add styling */
+.badge {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.badge-primary {
+  background-color: blue;
+  color: white;
+}
+.badge-success {
+  background-color: green;
+  color: white;
+}
+.badge-danger {
+  background-color: red;
+  color: white;
+}
+.badge-secondary {
+  background-color: gray;
+  color: white;
+}
 </style>

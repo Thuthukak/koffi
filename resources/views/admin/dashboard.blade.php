@@ -9,7 +9,7 @@
 </head>
 <body>
     <div id="app">
-        <Dashboard></Dashboard>
+    <dashboard-layout></dashboard-layout>
     </div>
 </body>
 </html>

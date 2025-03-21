@@ -16,6 +16,11 @@ class Booking extends Model
         'barber_id',
         'bookingSlot',
         'status',
+        'queue_position',
+        'expected_start_time',
+        'time_remaining',
+        'notification_sent',
+        'skipped_at',
         'skipCount',
     ];
     protected $casts = [
