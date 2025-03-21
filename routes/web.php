@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Controllers\Api;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\PasswordResetController;
@@ -7,7 +9,7 @@ use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\BarberController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Api\ProfileController;
 
 
 // Admin Authentication Routes
@@ -33,7 +35,7 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-Route::post('/bookings-store', [BookingController::class, 'store'])->name('bookings.store');
+Route::post('/bookings-store', [BookingController::class, 'store'])->name('bookings.create');
 
 Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
 Route::get('/api/services', [ServicesController::class, 'index']);

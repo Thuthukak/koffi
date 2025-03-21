@@ -244,7 +244,7 @@ export default {
       errorMessages.value = [];
 
       try {
-          const response = await axios.post('/bookings-create', {
+          const response = await axios.post('/book', {
             name: form.value.name,
             phone_number: form.value.phone_number,
             email: form.value.email,

@@ -88,9 +88,9 @@ class BookingController extends Controller
 
     // Find the last booking for this barber that is still in progress or queued
     $lastBooking = Booking::where('barber_id', $request->barber_id)
-                  ->whereIn('status', ['queued', 'in-progress'])
-                  ->orderBy('expected_start_time', 'desc')
-                  ->first();
+        ->whereIn('status', ['queued', 'in-progress'])
+        ->orderBy('expected_start_time', 'desc')
+        ->first();
 
     // Calculate expected start time and time remaining
     $startTime = $lastBooking
