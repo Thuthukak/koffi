@@ -6,31 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('barbers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('phoneNumber')->nullable();
+            $table->string('phone_number')->nullable();
             $table->text('bio')->nullable();
+            $table->integer('experience')->default(1);
+            $table->decimal('rating', 2, 1)->default(4.0);
+            $table->string('specialty', 50)->default('General Barber');
             $table->timestamps();
-        });
-
-        Schema::table('barbers', function (Blueprint $table) {
-            $table->integer('experience')->default(1)->after('bio');
-            $table->decimal('rating', 2, 1)->default(4.0)->after('experience');
-            $table->string('specialty', 50)->default('General Barber')->after('rating');
         });
     }
 
-public function down()
-{
-    Schema::dropIfExists('barbers');
-    Schema::table('barbers', function (Blueprint $table) {
-        $table->dropColumn(['experience', 'rating', 'specialty']);
-    });
-}
+    public function down(): void
+    {
+        Schema::dropIfExists('barbers');
+    }
 };

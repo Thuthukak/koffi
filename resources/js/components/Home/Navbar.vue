@@ -9,11 +9,15 @@
         <!-- Navigation -->
         <div class="hidden md:flex space-x-6 items-center">
           <a href="/" class="nav-item">Home</a>
-          <a href="#" class="nav-item">Bookings</a>
+          <a href="/bookings" class="nav-item">Bookings</a>
           <a href="/faq" class="nav-item">Grooming</a>
           <a href="/contact-us" class="nav-item">Contact Us</a>
   
           <!-- Auth Buttons -->
+          <a href="/admin/auth" class="bg-blue-500 px-4 py-2 rounded text-white">
+            Barber Login
+          </a>
+
           <!-- <button @click="openLoginModal" class="bg-blue-500  px-4 py-2 rounded-md">
             Login
           </button>

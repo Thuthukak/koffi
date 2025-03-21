@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\PasswordResetController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\BarberController;
 use App\Http\Controllers\BookingController;
@@ -11,6 +13,7 @@ Route::get('/', function () {
 
 Route::post('/bookings-store', [BookingController::class, 'store'])->name('bookings.store');
 
+// Services Routes
 Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
 Route::get('/api/services', [ServicesController::class, 'index']);
 Route::get('/api/barbers', [BarberController::class, 'index']);

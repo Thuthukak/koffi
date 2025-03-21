@@ -3,17 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Barber;
-use App\Models\Service;
-use App\Models\Client;
-use App\Models\Reminder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 
 class Booking extends Model
 {
     use SoftDeletes;
-    
+
     protected $fillable = [
         'client_id',
         'reference',
@@ -23,39 +18,36 @@ class Booking extends Model
         'status',
         'skipCount',
     ];
-
+    protected $casts = [
+        'bookingSlot' => 'datetime',
+    ];
     public function client()
     {
         return $this->belongsTo(Client::class);
     }
-
     public function barber()
     {
         return $this->belongsTo(Barber::class);
     }
-
     public function service()
     {
         return $this->belongsTo(Service::class);
     }
-    public function incrementSkips() {
+    public function incrementSkips()
+    {
         $this->increment('skipCount');
     }
-    
-    public function canRebook() {
+    public function hasExceededSkipLimit()
+    {
         return $this->skipCount >= 3;
     }
-
-    // Add these methods to Booking model
     public function scopeUpcoming($query)
     {
         return $query->where('bookingSlot', '>', now())
                     ->whereNotIn('status', ['completed', 'canceled']);
     }
-
-public function getFormattedDateAttribute()
-{
-    return $this->bookingSlot->format('D, M j H:i');
-}
-
+    public function getFormattedDateAttribute()
+    {
+        return $this->bookingSlot->format('D, M j H:i');
+    }
 }
