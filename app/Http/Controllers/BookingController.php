@@ -15,7 +15,6 @@ class BookingController extends Controller
 {
     public function index()
     {
-        // Queue status endpoint (moved from store)
         $bookings = Booking::with(['service', 'client'])
             ->whereIn('status', ['queued', 'in-progress'])
             ->orderBy('created_at')
