@@ -16,10 +16,8 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
             $table->string('reference');
             $table->foreignId('service_id')->constrained()->onDelete('cascade');
-            $table->foreignId('barber_id')->constrained()->onDelete('cascade');
             $table->string('bookingSlot')->nullable();
             $table->foreignId('barber_id')->constrained('barbers')->onDelete('cascade');
-            $table->dateTime('bookingSlot');
             $table->enum('status', ['queued', 'in-progress', 'completed', 'skipped', 're-booked', 'no-show',])->default('queued');
             $table->timestamp('start_time')->nullable();
             $table->integer('skipCount')->default(0); // number of times skipped
