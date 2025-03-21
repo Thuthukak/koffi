@@ -5,107 +5,52 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Booking;
-<<<<<<< HEAD
-use App\Models\Service;
 use App\Models\Barber;
+use App\Models\Service;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-=======
-use App\Models\Barber;
-use Illuminate\Support\Str;
 use App\Notifications\BookingConfirmation;
->>>>>>> 5e2a3ceb031b76d3e6820672d21cd32150fccf1a
 
 class BookingController extends Controller
 {
     public function index()
     {
-<<<<<<< HEAD
+        // Queue status endpoint (moved from store)
         $bookings = Booking::with(['service', 'client'])
-        ->whereIn('status', ['queued', 'in-progress'])
-        ->orderBy('created_at')
-        ->get();
+            ->whereIn('status', ['queued', 'in-progress'])
+            ->orderBy('created_at')
+            ->get();
 
-    $currentTime = Carbon::now();
-    $totalTime = 0;
-    $timePassed = 0;
+        $currentTime = Carbon::now();
+        $totalTime = 0;
+        $timePassed = 0;
 
-    // Find the in-progress booking
-    $inProgressBooking = $bookings->firstWhere('status', 'in-progress');
-
-    if ($inProgressBooking && $inProgressBooking->start_time) {
-        $timePassed = $currentTime->diffInMinutes(Carbon::parse($inProgressBooking->start_time));
-    }
-
-    $remainingTimeForCurrent = 0;
-
-    // Adjust queue time dynamically
-    $bookings->transform(function ($booking) use (&$totalTime, $timePassed, &$remainingTimeForCurrent) {
-        $serviceDuration = $booking->service->duration ?? 0;
-
-        if ($booking->status === 'in-progress') {
-            $remainingTimeForCurrent = max(0, $serviceDuration - $timePassed);
-            $totalTime += $remainingTimeForCurrent;
-        } else {
-            $totalTime += $serviceDuration;
+        $inProgressBooking = $bookings->firstWhere('status', 'in-progress');
+        if ($inProgressBooking && $inProgressBooking->start_time) {
+            $timePassed = $currentTime->diffInMinutes(
+                Carbon::parse($inProgressBooking->start_time)
+            );
         }
 
-        $booking->timeRemaining = max(0, $totalTime - $timePassed);
-        $booking->client_name = $booking->client->name ?? 'Unknown';
+        $remainingTimeForCurrent = 0;
 
-        return $booking;
-    });
+        $bookings->transform(function ($booking) use (&$totalTime, $timePassed, &$remainingTimeForCurrent) {
+            $serviceDuration = $booking->service->duration ?? 0;
 
-    return response()->json($bookings);
-    }
+            if ($booking->status === 'in-progress') {
+                $remainingTimeForCurrent = max(0, $serviceDuration - $timePassed);
+                $totalTime += $remainingTimeForCurrent;
+            } else {
+                $totalTime += $serviceDuration;
+            }
 
+            $booking->timeRemaining = max(0, $totalTime - $timePassed);
+            $booking->client_name = $booking->client->name ?? 'Unknown';
 
-    public function create(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'phoneNumber' => 'required|string|max:20',
-            'email' => 'required|email|unique:clients,email',
-            'service_id' => 'required|exists:services,id',
-            'barber_id' => 'required|exists:barbers,id',
-        ]);
-
-        // Create the client (or find existing one by email)
-        $client = Client::firstOrCreate(
-            ['email' => $request->email],
-            [
-                'name' => $request->name,
-                'phoneNumber' => $request->phoneNumber,
-            ]
-        );
-
-        // Generate a unique reference code
-        $reference = '#' . now()->format('dm') . '-' . Str::random(4);
-
-        // Create the booking
-        $booking = Booking::create([
-            'client_id' => $client->id,
-            'reference' => $reference,
-            'service_id' => $request->service_id,
-            'barber_id' => $request->barber_id,
-            'status' => 'queued',
-            'skipCount' => 0,
-        ]);
-
-        return response()->json([
-            'message' => 'Booking successfully created!',
-            'booking' => $booking,
-        ], 201);
-=======
-        return Barber::with('user')->get()->map(function($barber) {
-            return [
-                'id' => $barber->id,
-                'name' => $barber->user->name,
-                'specialty' => $barber->specialty,
-                'experience' => $barber->experience,
-                'rating' => $barber->rating
-            ];
+            return $booking;
         });
+
+        return response()->json($bookings);
     }
 
     public function store(Request $request)
@@ -115,34 +60,34 @@ class BookingController extends Controller
                 'name' => 'required|string|max:255',
                 'phone_number' => 'required_without:email|string|max:20',
                 'email' => 'required_without:phone_number|email|max:255',
-                'service' => 'required|exists:services,id',
-                'barber' => 'required|exists:barbers,id',
-                'bookingSlot' => 'required|date|after:now'
+                'service_id' => 'required|exists:services,id',
+                'barber_id' => 'required|exists:barbers,id',
+                'booking_slot' => 'required|date|after:now'
             ]);
 
             $client = Client::firstOrCreate(
-                ['email' => $request->email],
+                ['email' => $validated['email']],
                 [
-                    'name' => $request->name,
-                    'phoneNumber' => $request->phone_number,
-                    'email' => $request->email
+                    'name' => $validated['name'],
+                    'phone_number' => $validated['phone_number'],
                 ]
             );
 
             $booking = Booking::create([
                 'client_id' => $client->id,
-                'service_id' => $request->service,
-                'barber_id' => $request->barber,
-                'bookingSlot' => $request->bookingSlot,
-                'reference' => Str::uuid(),
-                'status' => 'queued'
+                'service_id' => $validated['service_id'],
+                'barber_id' => $validated['barber_id'],
+                'booking_slot' => $validated['booking_slot'],
+                'reference' => 'BOOK-' . Str::upper(Str::random(6)),
+                'status' => 'queued',
+                'skip_count' => 0,
             ]);
 
             return response()->json([
                 'success' => true,
                 'booking' => $booking,
                 'message' => 'Booking created successfully'
-            ]);
+            ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -150,6 +95,5 @@ class BookingController extends Controller
                 'message' => 'Server error: ' . $e->getMessage()
             ], 500);
         }
->>>>>>> 5e2a3ceb031b76d3e6820672d21cd32150fccf1a
     }
 }
