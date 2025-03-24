@@ -47,6 +47,7 @@ Route::middleware('guest')->group(function () {
 
 // Authenticated and guest routes
 Route::post('/book', [BookingController::class, 'create'])->name('book');
+Route::post('/book-walkins', [BookingController::class, 'createWalkins'])->name('book.walkins');
 // Route::post('/home', [DasboardController::class, 'home'])->name('home');
 
 

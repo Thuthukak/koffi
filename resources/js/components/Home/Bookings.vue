@@ -4,38 +4,8 @@
       <div class="grid grid-cols-2 gap-6">
         <!-- Booking Queue -->
         <div class="border rounded-md p-4 overflow-y-auto max-h-96">
-          <h2 class="text-xl font-bold mb-4">Queue</h2>
-          <ul>
-            <li v-for="booking in bookings" 
-              :key="booking.id" 
-              class="p-2 border-b"
-              >
-              <strong>{{ booking.reference }} - {{ booking.client_name }}</strong> 
-              <br>
-              Time Remaining: {{ formatTime(booking.timeRemaining) }}
-            </li>
-          </ul>
-        </div>
-
-        <!-- Check Position -->
-        <div class="p-4 border rounded-md">
-          <h2 class="text-xl font-bold mb-4">Check Position</h2>
-          <input v-model="searchQuery" type="text" class="border p-2 w-full" placeholder="Enter Name or Reference">
-          <button @click="searchQueue" class="mt-2 p-2 bg-blue-500 text-white w-full">Search</button>
-          
-          <div v-if="searchResult">
-            <p>Your position: {{ searchResult.position }}</p>
-            <p>Time remaining: {{ formatTime(searchResult.timeRemaining) }}</p>
-          </div>
-          
-          <button @click="openBookingModal" class="mt-4 p-2 bg-green-500 text-white w-full">Book Now</button>
-        </div>
-      </div>
-      <!-- temp booking queue -->
-      <div class="row">
-        <div class="col-md-6 mt-4">
           <h2 class="text-center">Live Booking Queue</h2>
-            <table class="table table-striped">
+            <table class="table table-striped mt-3">
               <thead>
                 <tr>
                   <th>Reference</th>
@@ -58,7 +28,21 @@
               </tbody>
             </table>
         </div>
-      </div>
+
+        <!-- Check Position -->
+        <div class="p-4 border rounded-md">
+          <h2 class="text-xl font-bold mb-4">Check Position</h2>
+          <input v-model="searchQuery" type="text" class="border p-2 w-full" placeholder="Enter Name or Reference">
+          <button @click="searchQueue" class="mt-2 p-2 bg-blue-500 text-white w-full">Search</button>
+          
+          <div v-if="searchResult">
+            <p>Your position: {{ searchResult.position }}</p>
+            <p>Time remaining: {{ formatTime(searchResult.timeRemaining) }}</p>
+          </div>
+          
+          <button @click="openBookingModal" class="mt-4 p-2 bg-green-500 text-white w-full">Book Now</button>
+        </div>
+      </div>    
     </section>
   </Layout>
   <BookingModal :isOpen="showBookingModal" @close="closeBookingModal" />

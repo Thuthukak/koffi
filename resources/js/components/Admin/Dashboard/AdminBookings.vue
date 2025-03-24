@@ -32,14 +32,14 @@
       </tbody>
     </table>
   </div>
-  <BookingModal :isOpen="showBookingModal" @close="closeBookingModal" />
+  <AdminBookingModal :isOpen="showBookingModal" @close="closeBookingModal" />
 </template>
 
 <script>
 import axios from "axios";
-import BookingModal from "@/components/Home/BookingModal.vue";
+import AdminBookingModal from "@/components/Admin/Dashboard/AdminBookingModal.vue";
 export default {
-  components: { BookingModal },
+  components: { AdminBookingModal },
   data() {
     return {
       bookings: [],

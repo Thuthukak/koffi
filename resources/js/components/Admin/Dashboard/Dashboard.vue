@@ -101,7 +101,7 @@
       <div class="col-md-6">
         <div class="card shadow-sm">
           <div class="card-body">
-            <h5 class="card-title">Quick Booking</h5>
+            <h5 class="card-title">Walk-in Bookings</h5>
             <div>
                 <form @submit.prevent="submitForm">
                   <div class="row">
@@ -253,7 +253,7 @@ export default {
 
     async submitForm() {
       try {
-        const response = await axios.post("/book", this.form);
+        const response = await axios.post("/book-walkins", this.form);
         console.log("Booking successful:", response.data);
 
         // Clear form after successful submission
