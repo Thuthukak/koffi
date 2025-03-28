@@ -29,6 +29,7 @@ class Booking extends Model
         'notification_sent',
         'skipped_at',
         'skipCount',
+        'queue_paused',
     ];
 
 

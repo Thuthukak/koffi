@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('bookingSlot')>nullable();
             $table->enum('status', ['queued', 'in-progress', 'completed', 'skipped', 're-booked', 'no-show',])->default('queued');
             $table->timestamp('start_time')->nullable();
+            $table->boolean('queue_paused')->default(true); // Default to true, meaning it waits for admin to start.
             $table->integer('skipCount')->default(0); // number of times skipped
             $table->softDeletes(); 
             $table->timestamps();

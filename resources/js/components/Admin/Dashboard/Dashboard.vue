@@ -192,6 +192,14 @@ export default {
         console.error("Error skipping booking:", error);
       }
     },
+    async nextQueue() {
+      try {
+        await axios.get("/admin/next");
+        this.fetchQueue();
+      } catch (error) {
+        console.error("Error going to next booking:", error);
+      }
+    },
     async fetchBookings() {
       try {
         const response = await axios.get("/api/bookings");
