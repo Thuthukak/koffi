@@ -62,7 +62,7 @@
    
     <div class="row mt-4">
       <div class="col-md-6">
-        <div class="card shadow-sm overflow-y-auto max-h-96 ">
+        <div class="card shadow-sm overflow-y-auto max-h-96">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
               <h5 class="card-title">Live Queue</h5>
