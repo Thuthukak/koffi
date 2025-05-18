@@ -3,7 +3,7 @@
     <!-- booking text on left. book button on right -->
     <div class="d-flex justify-content-between align-items-center">
       <h2 class="mb-4">Bookings</h2>
-      <button class="btn btn-primary" @click="openBookingModal">Book</button>
+      <!-- <button class="btn btn-primary" @click="openBookingModal">Book</button> -->
     </div>
     
 

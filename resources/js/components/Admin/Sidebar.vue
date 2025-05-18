@@ -17,11 +17,23 @@
         </router-link>
       </li>
       <li class="list-group-item bg-transparent border-0">
+        <router-link to="/admin/QueueManagement" class="d-flex align-items-center text-white p-2 rounded hover-effect">
+          <font-awesome-icon :icon="['fas', 'user-plus']" class="me-2" />
+          Queue Management
+        </router-link>
+      </li>
+      <li class="list-group-item bg-transparent border-0">
         <router-link to="/admin/bookings" class="d-flex align-items-center text-white p-2 rounded hover-effect">
           <font-awesome-icon :icon="['fas', 'calendar-alt']" class="me-2" />
           Bookings
         </router-link>
       </li>
+      <!-- <li class="list-group-item bg-transparent border-0">
+        <router-link to="/admin/QueueStats" class="d-flex align-items-center text-white p-2 rounded hover-effect">
+          <font-awesome-icon :icon="['fas', 'chart-line']" class="me-2" />
+          Queue Stats
+        </router-link>
+      </li> -->
       <!-- services -->
        <li class="list-group-item bg-transparent border-0">
         <router-link to="/admin/services" class="d-flex align-items-center text-white p-2 rounded hover-effect">

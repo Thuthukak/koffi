@@ -17,7 +17,8 @@ class BookingController extends Controller
     {
         $bookings = Booking::with(['service', 'client'])
         ->whereIn('status', ['queued', 'in-progress'])
-        ->orderBy('created_at')
+        //order by created-at in descending order
+        ->orderByAsc('created_at')
         ->get();
 
     $currentTime = Carbon::now();
@@ -287,10 +288,11 @@ class BookingController extends Controller
     public function adminBookingsData()
     {
         $bookings = Booking::with([
+      //in ascending order by created_at
             'client',
-            'barber.user', // Include the user relationship within barber
-            'service'
-        ])->get();
+            'barber.user',
+            'service',
+        ])->orderBy('created_at', 'desc')->get();
     
         // Transform data to include the barber's name
         $bookings->transform(function ($booking) {
