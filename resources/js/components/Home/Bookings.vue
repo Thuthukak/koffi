@@ -1,5 +1,7 @@
-```vue
 <template>
+  <Navbar />
+  <div class="row">
+    <div class="col-md-6">
   <div class="w-full max-w-4xl mx-auto px-4 py-8">
     <!-- Shop status banner -->
     <div :class="`w-full rounded-lg mb-6 p-4 text-white text-center ${isQueueActive ? 'bg-green-600' : 'bg-red-600'}`">
@@ -68,6 +70,11 @@
         </div>
       </div>
     </div>
+    </div>
+    </div>
+
+    <div class="col-md-6">
+    
     
     <!-- Action buttons -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -251,6 +258,8 @@
         </div>
       </div>
     </div>
+    </div>
+    </div>
     
     <!-- Information section -->
     <div class="bg-white rounded-lg border shadow-sm p-6">
@@ -270,11 +279,14 @@
         </p>
       </div>
     </div>
-  </div>
+  
+  <Footer />
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import Navbar from './Navbar.vue';
+import Footer from './Footer.vue';
 // Import Font Awesome library - you'll need to make sure these libraries are installed
 // npm install @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/vue-fontawesome
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -306,7 +318,7 @@ const waitingClients = ref([]);
 const searchQuery = ref('');
 const searchResult = ref(null);
 const isQueueActive = ref(false);
-const isJoinQueueOpen = ref(false);
+const isJoinQueueOpen = ref(true);
 const isCheckPositionOpen = ref(false);
 const services = ref([]);
 const refreshing = ref(false);
