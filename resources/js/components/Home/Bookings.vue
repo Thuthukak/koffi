@@ -271,7 +271,7 @@
                 >
                   <option value="">Select a barber</option>
                   <option v-for="barber in barbers" :key="barber.id" :value="barber.id">
-                    {{ barber.user.name }} 
+                    {{ barber.name }} 
                   </option>
                 </select>
                 <p v-if="formErrors.barber_id" class="text-red-500 text-xs mt-1 flex items-center">
