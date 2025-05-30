@@ -271,7 +271,7 @@
                 >
                   <option value="">Select a barber</option>
                   <option v-for="barber in barbers" :key="barber.id" :value="barber.id">
-                    {{ barber.name }} 
+                    {{ barber.user.name }} 
                   </option>
                 </select>
                 <p v-if="formErrors.barber_id" class="text-red-500 text-xs mt-1 flex items-center">
@@ -583,7 +583,7 @@ const joinQueue = async () => {
   joinSuccess.value = 'Processing...';
   
   try {
-    const response = await axios.post('/api/queue/join', newClient.value);
+    const response = await axios.post('/api/queue/add-walkin', newClient.value);
     
     joinSuccess.value = {
       message: 'Successfully added to queue!',

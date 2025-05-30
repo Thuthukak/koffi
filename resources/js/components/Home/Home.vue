@@ -435,7 +435,7 @@ body {
   right: 0;
   bottom: 0;
   background: url(/public/assets/images/home_banner.png) repeat;
-  opacity: 0.1;
+  opacity: 0.5;
 }
 
 .hero-content {

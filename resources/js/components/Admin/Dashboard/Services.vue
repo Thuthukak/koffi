@@ -61,7 +61,7 @@
                 {{ truncateText(service.description, 100) }}
               </span>
             </td>
-            <td>${{ service.price }}</td>
+            <td>R{{ service.price }}</td>
             <td>{{ service.duration }} min</td>
             <td class="text-center">
               <div class="btn-group">

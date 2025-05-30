@@ -43,6 +43,14 @@ Route::middleware('guest')->group(function () {
         return view('bookings');
     });
 
+    Route::get('/grooming', function () {
+        return view('grooming');
+    });
+
+    Route::get('/contactUs', function () {
+        return view('contactUs');
+    });
+
     
 });
 
@@ -75,6 +83,7 @@ Route::prefix('api')->group(function () {
     Route::post('/queue/reopen/{id}', [QueueController::class, 'reopenBooking']);
     Route::get('/queue/stats', [QueueController::class, 'getQueueStats']);
     Route::get('/server-time', [QueueController::class, 'getServerTime']);
+    Route::get('/total-revenue', [QueueController::class, 'totalRevenue']);
 });
 
 require __DIR__.'/auth.php';

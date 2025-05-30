@@ -327,4 +327,12 @@ class QueueController extends Controller
         ]);
     }
 
+    public function totalRevenue ()
+    {
+        return response()->json([
+            //find service_id in bookings table and find price of service
+            'revenue' => Booking::where('status', 'completed')->sum('service.price')
+        ]);
+    }
+
 }
