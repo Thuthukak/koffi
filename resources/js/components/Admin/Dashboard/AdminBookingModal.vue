@@ -86,7 +86,7 @@ export default {
   setup(props, { emit }) {
     const form = ref({
       name: '',
-      phone_number: '',
+      phoneNumber: '',
       email: '',
       service_id: '',
       barber_id: '',
@@ -121,7 +121,7 @@ export default {
 
     const submitForm = async () => {
       try {
-        const response = await axios.post('/book', form.value);
+        const response = await axios.post('/book-walkins', form.value);
         
         console.log(response.data);
 
@@ -152,6 +152,8 @@ export default {
 
     return {
       form,
+      services,
+      barbers,
       errorMessages,
       isModalOpen,
       closeModal,

@@ -22,6 +22,10 @@ class Booking extends Model
         'bookingSlot',
         'status',
         'skipCount',
+        'start_time',
+        'end_time',
+        'actual_duration',
+        'notified'
     ];
 
     public function client()

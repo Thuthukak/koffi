@@ -46,6 +46,7 @@
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars, faMoon, faSun, faGlobe, faUser, faBell, faCog, faHome, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export default {
   name: "Navbar",
@@ -74,18 +75,26 @@ export default {
       this.dropdownOpen = !this.dropdownOpen;
     },
     goToProfile() {
+      window.location.href = "/admin/profile";
       console.log("Go to Profile");
     },
     viewNotifications() {
       console.log("View Notifications");
     },
     goToSettings() {
+      window.location.href = "/admin/settings";
       console.log("Go to Settings");
     },
     goHome() {
+      axios.post("/logout").then(() => {
+        window.location.href = "/";
+      })
       console.log("Go to Home");
     },
     logout() {
+      axios.post("/logout").then(() => {
+        window.location.href = "/";
+      })
       console.log("Logging out...");
     },
   },
