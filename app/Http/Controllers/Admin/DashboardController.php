@@ -20,6 +20,14 @@ class DashboardController extends Controller
         return view('admin.dashboard');
     }
 
+    public function userData(Request $request)
+    {
+        //fetch data of authenticated user
+        return response()->json([
+            'user' => $request->user(),
+        ]);
+    } 
+
     // public function home ()
     // {
     //     Auth::guard('web')->logout();

@@ -71,7 +71,8 @@ Route::prefix('api')->group(function () {
     Route::get('/barbers', [BarberController::class, 'index'])->name('barbers.index');
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::get('/bookings/data', [BookingController::class, 'adminBookingsData'])->name('admin.bookings.data');
-    Route::get('/queue', [BookingController::class, 'liveQueue']); 
+    Route::get('/queue', [BookingController::class, 'liveQueue']);
+    Route::get('/user/data', [DashboardController::class, 'userData'])->name('user.data'); 
 
      // Queue Management Routes
     Route::get('/queue/current', [QueueController::class, 'getCurrentQueue']);
