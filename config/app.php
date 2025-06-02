@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Africa/Johannesburg',  // Changed from 'UTC' to 'Africa/Johannesburg'
 
     /*
     |--------------------------------------------------------------------------

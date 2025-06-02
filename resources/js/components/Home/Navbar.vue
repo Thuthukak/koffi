@@ -1,9 +1,9 @@
 <template>
-    <nav class="bg-shape-primary shadow-md sticky top-0 z-50">
+    <nav class="bg-shape-primary shadow sticky top-0 z-50">
       <div class="container mx-auto flex justify-between items-center py-4 px-6">
         <!-- Logo -->
         <a href="#" class="text-xl font-bold">
-            <img src="#" alt="Logo" style="width: 200px; height: auto;" />
+            <img src="#" alt="KOFI" style="width: 200px; height: auto;" />
         </a>
   
         <!-- Navigation -->
@@ -37,7 +37,7 @@
   <style scoped>
 
   .bg-shape-primary{
-    background-color: #383838 !important;
+    background-color: #ffffff !important;
   }
   .hover{
     color:#e89c35

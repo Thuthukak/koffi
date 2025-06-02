@@ -20,7 +20,8 @@ class BookingController extends Controller
     {
         $bookings = Booking::with(['service', 'client'])
         ->whereIn('status', ['queued', 'in-progress'])
-        ->orderBy('created_at')
+        //order by created-at in descending order
+        ->orderByAsc('created_at')
         ->get();
 
     $currentTime = Carbon::now();
@@ -57,7 +58,7 @@ class BookingController extends Controller
     }
 
 
-    public function create(Request $request)
+    public function create(Request $request) //need to implement payment gateway in this method
 {
     Log::info('we in the create booking method', ['request' => $request->all()]);
     
@@ -120,6 +121,73 @@ class BookingController extends Controller
         'booking' => $booking,
     ], 201);
 }
+
+
+    //Create bookings from admin side for walk-in customers no payment gateway integration
+
+    public function createWalkins(Request $request) //need to implement payment gateway in this method
+    {
+        Log::info('we in the create booking method', ['request' => $request->all()]);
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phoneNumber' => 'required|string|max:20',
+            'email' => 'required|email|unique:clients,email',
+            'service_id' => 'required|exists:services,id',
+            'barber_id' => 'required|exists:barbers,id',
+        ]);
+    
+        // Create or find the client by email
+        $client = Client::firstOrCreate(
+            ['email' => $request->email],
+            [
+                'name' => $request->name,
+                'phoneNumber' => $request->phoneNumber,
+            ]
+        );
+    
+        Log::info('Client created/found', ['client' => $client]);
+    
+        // Retrieve the selected service to get its duration
+        $service = Service::findOrFail($request->service_id);
+    
+        // Generate a unique reference code
+        $reference = '#' . now()->format('dm') . '-' . Str::random(4);
+    
+        // Find the last booking for this barber that is still in progress or queued
+        $lastBooking = Booking::where('barber_id', $request->barber_id)
+                      ->whereIn('status', ['queued', 'in-progress'])
+                      ->orderBy('expected_start_time', 'desc')
+                      ->first();
+    
+        // Calculate expected start time and time remaining
+        $startTime = $lastBooking
+            ? Carbon::parse($lastBooking->expected_start_time)->addMinutes($service->duration)
+            : now();
+    
+        $timeRemaining = $lastBooking
+            ? $lastBooking->time_remaining + $service->duration
+            : 0;
+    
+        // Create the booking
+        $booking = Booking::create([
+            'client_id' => $client->id,
+            'reference' => $reference,
+            'service_id' => $request->service_id,
+            'barber_id' => $request->barber_id,
+            'expected_start_time' => $startTime,
+            'time_remaining' => $timeRemaining,
+            'status' => 'queued',
+            'skipCount' => 0,
+        ]);
+    
+        Log::info('Booking created', ['booking' => $booking]);
+    
+        return response()->json([
+            'message' => 'Booking successfully created!',
+            'booking' => $booking,
+        ], 201);
+    }
 
 
     // skip customer in queue
@@ -223,10 +291,11 @@ class BookingController extends Controller
     public function adminBookingsData()
     {
         $bookings = Booking::with([
+      //in ascending order by created_at
             'client',
-            'barber.user', // Include the user relationship within barber
-            'service'
-        ])->get();
+            'barber.user',
+            'service',
+        ])->orderBy('created_at', 'desc')->get();
     
         // Transform data to include the barber's name
         $bookings->transform(function ($booking) {

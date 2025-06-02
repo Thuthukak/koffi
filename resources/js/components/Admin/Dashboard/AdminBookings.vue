@@ -3,7 +3,7 @@
     <!-- booking text on left. book button on right -->
     <div class="d-flex justify-content-between align-items-center">
       <h2 class="mb-4">Bookings</h2>
-      <button class="btn btn-primary" @click="openBookingModal">Book</button>
+      <!-- <button class="btn btn-primary" @click="openBookingModal">Book</button> -->
     </div>
     
 
@@ -32,14 +32,14 @@
       </tbody>
     </table>
   </div>
-  <BookingModal :isOpen="showBookingModal" @close="closeBookingModal" />
+  <AdminBookingModal :isOpen="showBookingModal" @close="closeBookingModal" />
 </template>
 
 <script>
 import axios from "axios";
-import BookingModal from "@/components/Home/BookingModal.vue";
+import AdminBookingModal from "@/components/Admin/Dashboard/AdminBookingModal.vue";
 export default {
-  components: { BookingModal },
+  components: { AdminBookingModal },
   data() {
     return {
       bookings: [],

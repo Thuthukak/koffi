@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+    <h1 class="text-2xl font-bold mb-6">Queue Dashboard</h1>
     
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -21,12 +21,6 @@
         <p class="text-3xl font-bold">{{ totalQueueTime }}</p>
         <p class="text-sm text-gray-600">estimated wait</p>
       </div>
-
-      <!-- <div class="p-4 bg-indigo-50 rounded-md shadow">
-        <h2 class="text-lg font-semibold text-indigo-800">Total Revenue</h2>
-        <p class="text-3xl font-bold">R{{ totalRevenue }}</p>
-        <p class="text-sm text-gray-600">Revenue this month</p>
-      </div> -->
     </div>
     
     <!-- Queue Status -->
@@ -238,15 +232,6 @@ export default {
       // Convert to minutes and ensure it's not negative
       return Math.max(0, Math.floor(elapsedMs / 60000));
     };
-
-    const totalRevenue = async () => {
-      try {
-        const response = await axios.get("/api/total-revenue");
-        return response.data.total_revenue;
-      } catch (error) {
-        console.error("Error fetching total revenue:", error);
-      }
-    }
     
     // Fetch queue data
     const fetchQueue = async () => {
@@ -490,7 +475,6 @@ export default {
       currentClientStatus,
       averageServiceTime,
       totalQueueTime,
-      totalRevenue,
       progressPercentage,
       progressBarColor,
       formatTime,
