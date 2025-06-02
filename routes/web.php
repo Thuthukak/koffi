@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Controllers\Api;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\PasswordResetController;
@@ -9,6 +11,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QueueController;
+use App\Http\Controllers\Api\ProfileController;
 
 // Admin Authentication Routes
 Route::prefix('admin')->group(function () {
@@ -32,6 +35,16 @@ Route::prefix('admin')->group(function () {
         
     });
 });
+
+Route::post('/bookings-store', [BookingController::class, 'store'])->name('bookings.create');
+
+Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
+Route::get('/api/services', [ServicesController::class, 'index']);
+Route::get('/api/barbers', [BarberController::class, 'index']);
+Route::get('/api/services', [ServicesController::class, 'index']);
+Route::get('/api/barbers', [BarberController::class, 'index']);
+
+Route::get('/barbers', [BarberController::class, 'index'])->name('barbers.index');
 
 // Client Routes (Public Routes - Non-authenticated users)
 Route::middleware('guest')->group(function () {

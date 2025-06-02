@@ -24,4 +24,3 @@ export default {
   components: { Sidebar, Navbar },
 };
 </script>
-

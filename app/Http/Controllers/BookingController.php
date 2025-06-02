@@ -10,6 +10,9 @@ use App\Models\Barber;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\BookingReminderNotification;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class BookingController extends Controller
 {
@@ -86,9 +89,9 @@ class BookingController extends Controller
 
     // Find the last booking for this barber that is still in progress or queued
     $lastBooking = Booking::where('barber_id', $request->barber_id)
-                  ->whereIn('status', ['queued', 'in-progress'])
-                  ->orderBy('expected_start_time', 'desc')
-                  ->first();
+        ->whereIn('status', ['queued', 'in-progress'])
+        ->orderBy('expected_start_time', 'desc')
+        ->first();
 
     // Calculate expected start time and time remaining
     $startTime = $lastBooking

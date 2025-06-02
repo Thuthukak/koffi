@@ -56,7 +56,6 @@ class ServicesController extends Controller
         $service = Service::findOrFail($id);
         return response()->json($service);
     }
-
     /**
      * Update the specified service
      *
