@@ -8,7 +8,7 @@ import Admin from './components/Admin/Admin.vue';
 import Dashboard from './components/Admin/Dashboard/Dashboard.vue'; 
 import DashboardLayout from './Layouts/DashboardLayout.vue';
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"; 
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import router from './router'; 
 
 

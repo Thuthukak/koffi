@@ -34,6 +34,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    // In User model
+    public function barber()
+    {
+        return $this->hasOne(Barber::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

@@ -15,6 +15,9 @@ class Barber extends Model
         'user_id',
         'phone',
         'bio',
+        'experience',
+        'rating',
+        'specialty'
     ];
 
     public function user()
