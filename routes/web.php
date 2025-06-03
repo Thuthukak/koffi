@@ -9,6 +9,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QueueController;
+use App\Http\Controllers\Auth\PasswordController;
 
 // Admin Authentication Routes
 Route::prefix('admin')->group(function () {
@@ -25,10 +26,13 @@ Route::prefix('admin')->group(function () {
         Route::get('/{any}', function () { return view('admin.dashboard'); })->where('any', '.*')->name('dashboard.any');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
         Route::post('/add-service', [ServicesController::class, 'create'])->name('services.create');
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('/profile', [ProfileController::class, 'show']);
+        Route::patch('/profile', [ProfileController::class, 'update']);
+        Route::post('/profile/picture', [ProfileController::class, 'uploadPicture']);
+        Route::delete('/profile/picture', [ProfileController::class, 'removePicture']);
+        Route::delete('/profile', [ProfileController::class, 'destroy']);
         Route::get('/skip-booking/{bookingId}', [BookingController::class, 'skipBooking'])->name('skip.booking');
+        Route::put('/user/password', [PasswordController::class, 'update']);
         
     });
 });

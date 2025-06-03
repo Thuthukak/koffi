@@ -160,7 +160,7 @@
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
           >
             <option v-for="barber in barbers" :key="barber.id" :value="barber.id">
-              {{ barber.user.name }}
+              {{ barber.name }}
             </option>
           </select>
         </div>
