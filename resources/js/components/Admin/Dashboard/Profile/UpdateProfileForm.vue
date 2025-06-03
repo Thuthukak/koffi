@@ -3,7 +3,7 @@
     <header class="mb-6">
       <h2 class="text-lg font-medium text-gray-900">Profile Information</h2>
       <p class="mt-1 text-sm text-gray-600">
-        Update your account's profile information and email address.
+        Update your account's profile information.
       </p>
     </header>
 
@@ -34,8 +34,9 @@
             type="email"
             v-model="form.email"
             required
+            readonly
             autocomplete="username"
-            class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded transition-colors"
           />
           <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
         </div>
@@ -113,7 +114,7 @@ export default {
   methods: {
     async fetchProfile() {
       try {
-        const response = await axios.get("admin/profile");
+        const response = await axios.get("/api/profile/data");
         this.form.name = response.data.name;
         this.form.email = response.data.email;
         this.mustVerifyEmail = response.data.must_verify_email;

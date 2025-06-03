@@ -100,7 +100,7 @@ export default {
   methods: {
     async fetchProfilePicture() {
       try {
-        const response = await axios.get("/admin/profile");
+        const response = await axios.get("/api/profile/data");
         this.profilePicture = response.data.profile_picture;
       } catch (error) {
         console.error("Error fetching profile picture:", error);

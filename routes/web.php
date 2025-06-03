@@ -35,6 +35,9 @@ Route::prefix('admin')->group(function () {
         Route::put('/user/password', [PasswordController::class, 'update']);
         
     });
+    Route::prefix('api')->group(function () {
+        Route::get('/get/profile-data', [ProfileController::class, 'profileData'])->name('profile.data');
+    });
 });
 
 // Client Routes (Public Routes - Non-authenticated users)
@@ -90,6 +93,9 @@ Route::prefix('api')->group(function () {
     Route::get('/queue/stats', [QueueController::class, 'getQueueStats']);
     Route::get('/server-time', [QueueController::class, 'getServerTime']);
     Route::get('/total-revenue', [QueueController::class, 'totalRevenue']);
+
+    // Profile
+    Route::get('/profile/data', [ProfileController::class, 'show'])->name('profile.data');
 });
 
 require __DIR__.'/auth.php';

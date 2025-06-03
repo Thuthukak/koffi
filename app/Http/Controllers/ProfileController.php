@@ -12,6 +12,11 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Http\JsonResponse;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Str;
+use App\Services\ImageService;
+use Intervention\Image\Laravel\Facades\Image;
+use Illuminate\Support\Facades\Log;
+use Intervention\Image\ImageManager;
+
 
 class ProfileController extends Controller
 {
@@ -100,46 +105,59 @@ class ProfileController extends Controller
      */
     public function uploadPicture(Request $request): JsonResponse
     {
-        $request->validate([
-            'profile_picture' => [
-                'required',
-                'image',
-                'mimes:jpeg,jpg,png,gif',
-                'max:2048', // 2MB max
-            ],
-        ]);
+        try {
+            Log::info('Starting upload picture method');
+            
+            $request->validate([
+                'profile_picture' => [
+                    'required',
+                    'image',
+                    'mimes:jpeg,jpg,png,gif',
+                    'max:2048',
+                ],
+            ]);
 
-        $user = Auth::user();
+            $user = Auth::user();
+            
+            // Delete old profile picture if exists
+            if ($user->profile_picture) {
+                Storage::disk('public')->delete($user->profile_picture);
+            }
 
-        // Delete old profile picture if exists
-        if ($user->profile_picture) {
-            Storage::disk('public')->delete($user->profile_picture);
+            // Process and store the new image
+            $image = $request->file('profile_picture');
+            $filename = $this->generateUniqueFilename($image->getClientOriginalExtension());
+            $path = 'profile-pictures/' . $filename;
+
+            // Create ImageManager with GD driver
+            $manager = new ImageManager(new Driver());
+            
+            // Resize and optimize the image
+            $processedImage = $manager->read($image)
+                ->cover(400, 400)
+                ->toJpeg(85);
+
+            // Store the processed image
+            Storage::disk('public')->put($path, $processedImage);
+
+            // Update user record
+            $user->profile_picture = $path;
+            $user->save();
+
+            return response()->json([
+                'message' => 'Profile picture uploaded successfully.',
+                'profile_picture' => Storage::url($path),
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Profile picture upload failed: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Failed to upload profile picture.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        // Process and store the new image
-        $image = $request->file('profile_picture');
-        $filename = $this->generateUniqueFilename($image->getClientOriginalExtension());
-        $path = 'profile-pictures/' . $filename;
-
-        // Resize and optimize the image
-        $processedImage = Image::make($image)
-            ->fit(400, 400, function ($constraint) {
-                $constraint->upsize();
-            })
-            ->encode('jpg', 85);
-
-        // Store the processed image
-        Storage::disk('public')->put($path, $processedImage->stream());
-
-        // Update user record
-        $user->profile_picture = $path;
-        $user->save();
-
-        return response()->json([
-            'message' => 'Profile picture uploaded successfully.',
-            'profile_picture' => Storage::url($path),
-        ]);
     }
+    
 
     /**
      * Remove profile picture
