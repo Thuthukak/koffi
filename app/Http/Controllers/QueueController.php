@@ -165,40 +165,44 @@ class QueueController extends Controller
         }
     }
 
-    // New methods to add:
-    
-    public function skipClient($id)
+    /**
+     * Remove/Cancel a client from the queue (soft delete)
+     */
+    public function removeClient($id)
     {
-        // Find the booking to skip
+        // Find the booking to remove
         $booking = Booking::find($id);
         
-        if (!$booking || $booking->status !== 'queued') {
-            return response()->json(['message' => 'Booking not found or not in queue'], 404);
+        if (!$booking) {
+            return response()->json(['message' => 'Booking not found'], 404);
         }
         
-        // Update skip count and move to end of the queue if applicable
-        $skipCount = $booking->skipCount + 1;
-        
-        if ($skipCount >= 3) {
-            // After 3 skips, mark as no-show
-            $booking->update([
-                'status' => 'no-show',
-                'skipCount' => $skipCount
-            ]);
-        } else {
-            // Otherwise, just increment skip count
-            // We keep the same queue position but track the skips
-            $booking->update([
-                'skipCount' => $skipCount
-            ]);
+        // Only allow removal of queued bookings (not in-progress or completed)
+        if ($booking->status !== 'queued') {
+            return response()->json(['message' => 'Can only remove clients that are waiting in queue'], 400);
         }
         
-        // Broadcast queue update
+        // Soft delete the booking
+        // $booking->delete();
+        
+        // Update the booking status
+        $booking->update(['status' => 'skipped']);
+        
+        
+        // Log the removal for audit purposes
+        Log::info('Booking removed from queue', [
+            'booking_id' => $booking->id,
+            'client_name' => $booking->client->name,
+            'reference' => $booking->reference,
+            'removed_at' => now()
+        ]);
+        
+        // Broadcast queue update to refresh all connected clients
         broadcast(new QueueUpdated())->toOthers();
         
         return response()->json([
-            'message' => 'Client skipped',
-            'booking' => $booking
+            'message' => 'Client removed from queue',
+            'booking_id' => $booking->id
         ]);
     }
     

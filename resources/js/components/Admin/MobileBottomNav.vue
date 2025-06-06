@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex justify-around items-center py-2 px-1 bg-dark text-white">
+  <nav class="flex justify-around items-center py-2 px-1 bg-dark text-black">
     <router-link
       v-for="item in navigationItems"
       :key="item.path"

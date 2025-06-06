@@ -98,7 +98,7 @@ export default {
           return "badge bg-primary";
         case "completed":
           return "badge bg-success";
-        case "cancelled":
+        case "skipped":
           return "badge bg-danger";
         default:
           return "badge bg-secondary";
