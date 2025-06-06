@@ -12,7 +12,7 @@ class BarberController extends Controller
     {
         $barbers = Barber::with(['user', 'bookings' => function($query) use ($request) {
             $query->whereDate('bookingSlot', $request->date)
-                  ->whereIn('status', ['queued', 'in-progress']);
+                ->whereIn('status', ['queued', 'in-progress']);
         }])->get();
     
         return response()->json($barbers->map(function($barber) {

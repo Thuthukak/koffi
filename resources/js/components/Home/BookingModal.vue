@@ -121,21 +121,30 @@ export default {
 
     const submitForm = async () => {
       try {
-        const response = await axios.post('/book', form.value);
-        
-        console.log(response.data);
+          const response = await axios.post('/book', {
+            name: form.value.name,
+            phone_number: form.value.phone_number,
+            email: form.value.email,
+            service: form.value.service,
+            barber: form.value.barber,
+            bookingSlot: form.value.bookingSlot
+          });
 
-        // Reset form
-        form.value = {
-          name: '',
-          phoneNumber: '',
-          email: '',
-          service_id: '',
-          barber_id: '',
-        };
-
-        // Close modal
-        closeModal();
+          if (response.data.success) {
+            emit('booking-created', {
+            client: {
+              name: form.value.name,
+              phone: form.value.phone_number,
+              email: form.value.email
+            },
+            service: services.value.find(s => s.id === form.value.service),
+            barber: barbers.value.find(b => b.id === form.value.barber),
+            bookingSlot: form.value.bookingSlot,
+            reference: response.data.booking.reference
+          });
+          resetForm();
+          closeModal();
+        }
       } catch (error) {
         if (error.response && error.response.data.errors) {
           errorMessages.value = Object.values(error.response.data.errors).flat();

@@ -57,7 +57,7 @@ class TestDataSeeder extends Seeder
 
         return Barber::create([
             'user_id' => $user->id,
-            'phoneNumber' => '07123456'.(70 + $index),
+            'phone' => '07123456'.(70 + $index),
             'bio' => 'Professional barber with '.($index + 3).' years experience',
             'experience' => $index + 3,
             'rating' => 4.5 + ($index * 0.2),

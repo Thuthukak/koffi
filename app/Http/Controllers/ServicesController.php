@@ -13,15 +13,7 @@ class ServicesController extends Controller
      */
     public function index()
     {
-        return Service::all()->map(function($service) {
-            return [
-                'id' => $service->id,
-                'name' => $service->name,
-                'duration' => $service->duration,
-                'price' => number_format($service->price, 2),
-                'description' => $service->description
-            ];
-        });
+        return response()->json(Service::all());
     }
 
     /**
@@ -64,7 +56,6 @@ class ServicesController extends Controller
         $service = Service::findOrFail($id);
         return response()->json($service);
     }
-
     /**
      * Update the specified service
      *

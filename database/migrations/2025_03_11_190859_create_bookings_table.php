@@ -22,10 +22,20 @@ return new class extends Migration
             $table->integer('actual_duration')->nullable();
             $table->boolean('notified')->default(false);
             $table->string('bookingSlot')->nullable();
+            $table->foreignId('barber_id')->constrained('barbers')->onDelete('cascade');
+            $table->dateTime('bookingSlot');
             $table->enum('status', ['queued', 'in-progress', 'completed', 'skipped', 're-booked', 'no-show',])->default('queued');
             $table->integer('skipCount')->default(0); // number of times skipped
             $table->softDeletes();
             $table->timestamps();
+        });
+
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->integer('queue_position')->nullable()->after('status');
+            $table->timestamp('expected_start_time')->nullable()->after('queue_position');
+            $table->integer('time_remaining')->default(0)->after('expected_start_time');
+            $table->boolean('notification_sent')->default(false)->after('time_remaining');
+            $table->timestamp('skipped_at')->nullable()->after('notification_sent');
         });
     }
 
@@ -34,6 +44,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookings');
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->dropColumn(['queue_position', 'expected_start_time', 'time_remaining', 'notification_sent', 'skipped_at']);
+        });
     }
 };

@@ -41,54 +41,112 @@
       </button>
     </div>
 
-    <!-- Services table -->
-    <div v-else class="table-responsive">
-      <table class="table table-hover border">
-        <thead class="table-light">
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Duration</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="service in filteredServices" :key="service.id" class="align-middle">
-            <td class="fw-medium">{{ service.name }}</td>
-            <td>
-              <span :title="service.description">
-                {{ truncateText(service.description, 100) }}
-              </span>
-            </td>
-            <td>R{{ service.price }}</td>
-            <td>{{ service.duration }} min</td>
-            <td class="text-center">
-              <div class="btn-group">
-                <button 
-                  class="btn btn-outline-primary btn-sm" 
-                  @click="openEditModal(service)"
-                  title="Edit service"
-                >
-                  <i class="bi bi-pencil-square"></i>
-                </button>
-                <button 
-                  class="btn btn-outline-danger btn-sm" 
-                  @click="openDeleteModal(service)"
-                  title="Delete service"
-                >
-                  <i class="bi bi-trash"></i>
-                </button>
+    <!-- Services table for desktop -->
+    <div v-else class="d-none d-md-block">
+      <div class="table-responsive rounded">
+        <table class="table table-hover border">
+          <thead class="table-light">
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Duration</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="service in filteredServices" :key="service.id" class="align-middle">
+              <td class="fw-medium">{{ service.name }}</td>
+              <td>
+                <span :title="service.description">
+                  {{ truncateText(service.description, 100) }}
+                </span>
+              </td>
+              <td>R{{ service.price }}</td>
+              <td>{{ service.duration }} min</td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button 
+                    class="btn btn-outline-primary btn-sm" 
+                    @click="openEditModal(service)"
+                    title="Edit service"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button 
+                    class="btn btn-outline-danger btn-sm" 
+                    @click="openDeleteModal(service)"
+                    title="Delete service"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Mobile card layout -->
+    <div class="d-block d-md-none">
+      <div class="row g-3">
+        <div class="col-12" v-for="service in filteredServices" :key="service.id">
+          <div class="card service-card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="card-title mb-0 text-truncate me-2">{{ service.name }}</h5>
+                <div class="btn-group flex-shrink-0">
+                  <button 
+                    class="btn btn-outline-primary btn-sm" 
+                    @click="openEditModal(service)"
+                    title="Edit service"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button 
+                    class="btn btn-outline-danger btn-sm" 
+                    @click="openDeleteModal(service)"
+                    title="Delete service"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              
+              <p class="card-text text-muted mb-3" :title="service.description">
+                {{ truncateText(service.description, 120) }}
+              </p>
+              
+              <div class="row g-2">
+                <div class="col-6">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-currency-dollar text-success me-2"></i>
+                    <div>
+                      <small class="text-muted d-block">Price</small>
+                      <strong>R{{ service.price }}</strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-clock text-primary me-2"></i>
+                    <div>
+                      <small class="text-muted d-block">Duration</small>
+                      <strong>{{ service.duration }} min</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Add/Edit Modal -->
-    <div class="modal fade" id="serviceModal" tabindex="-1" ref="serviceModal">
-      <div class="modal-dialog">
+    <div class="modal fade " id="serviceModal" tabindex="-1" ref="serviceModal">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">{{ isEditing ? 'Edit Service' : 'Add New Service' }}</h5>
@@ -148,7 +206,7 @@
                 </div>
               </div>
               
-              <div class="d-flex justify-content-end gap-2">
+              <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
                 <button type="button" class="btn btn-secondary" @click="closeModal">Cancel</button>
                 <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
                   <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
@@ -163,7 +221,7 @@
 
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" ref="deleteModal">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Delete Service</h5>
@@ -480,5 +538,62 @@ export default {
 
 .toast {
   min-width: 250px;
+}
+
+.service-card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.service-card:hover {
+  border-color: #0d6efd;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.service-card .card-title {
+  color: #212529;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.service-card .card-text {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Mobile modal improvements */
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 1rem 0.5rem;
+  }
+  
+  .modal-footer .btn {
+    font-size: 0.875rem;
+  }
+  
+  .btn-group .btn {
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* Ensure buttons stack on very small screens */
+@media (max-width: 575px) {
+  .d-flex.flex-column.flex-sm-row .btn {
+    width: 100%;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .btn-group .btn {
+    border-radius: 0.375rem !important;
+    margin-bottom: 0.25rem;
+  }
+  
+  .btn-group .btn:last-child {
+    margin-bottom: 0;
+  }
 }
 </style>

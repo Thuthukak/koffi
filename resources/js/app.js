@@ -8,7 +8,7 @@ import Admin from './components/Admin/Admin.vue';
 import Dashboard from './components/Admin/Dashboard/Dashboard.vue'; 
 import DashboardLayout from './Layouts/DashboardLayout.vue';
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"; 
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import router from './router'; 
 
 
@@ -20,7 +20,10 @@ import { faBars,
         faBell, 
         faCog,
         faUserPlus, 
-        faHome, 
+        faHome,
+        faChevronRight,
+        faChevronLeft, 
+        faEllipsisH,    
         faSignOutAlt,
         faCalendarAlt,
         faCut,
@@ -40,6 +43,9 @@ library.add
             faSun, 
             faGlobe, 
             faUser,
+            faChevronRight,
+            faChevronLeft,
+            faEllipsisH,
             faUserPlus, 
             faBell, 
             faCog, 

@@ -220,7 +220,7 @@ class QueueController extends Controller
             ['email' => $request->email ?: $request->phoneNumber],
             [
                 'name' => $request->name,
-                'phone' => $request->phoneNumber,
+                'phoneNumber' => $request->phoneNumber,
                 'email' => $request->email,
             ]
             
