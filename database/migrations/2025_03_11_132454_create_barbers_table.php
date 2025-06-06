@@ -6,12 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-<<<<<<< HEAD
+
     /**
      * Run the migrations.
      */
-=======
->>>>>>> bookingsRefined
+
     public function up(): void
     {
         Schema::create('barbers', function (Blueprint $table) {
