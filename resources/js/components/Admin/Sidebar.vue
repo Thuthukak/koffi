@@ -160,5 +160,6 @@ export default {
 }
 ul {
   padding-left:0rem !important;
+  color: #ffffff !important;
 }
 </style>
