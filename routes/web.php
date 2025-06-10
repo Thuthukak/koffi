@@ -40,8 +40,8 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-// Client Routes (Public Routes - Non-authenticated users)
-Route::middleware('guest')->group(function () {
+    // (Public Routes -  Auth and Non-authenticated users)
+
     Route::get('/', function () {
         return view('welcome');
     });
@@ -57,15 +57,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/contactUs', function () {
         return view('contactUs');
     });
-
-    
-});
-
-// Authenticated and guest routes
-Route::post('/book', [BookingController::class, 'create'])->name('book');
-Route::post('/book-walkins', [BookingController::class, 'createWalkins'])->name('book.walkins');
-// Route::post('/home', [DasboardController::class, 'home'])->name('home');
-
 
 
 // API Routes (Public API)

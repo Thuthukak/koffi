@@ -151,6 +151,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
+
 export default {
   name: "Navbar",
   components: { FontAwesomeIcon },
@@ -284,9 +285,14 @@ export default {
       this.$router.push('/admin/settings');
     },
     
-    goHome() {
-      this.dropdownOpen = false;
-      this.$router.push('/');
+    async goHome() {
+        this.dropdownOpen = false;
+        try {
+            await axios.get('/'); // Direct URL instead of route helper
+            window.location.href = '/'; // If you want to redirect
+        } catch (error) {
+            console.error('Error:', error);
+        }
     },
     
     async logout() {
