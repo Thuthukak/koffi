@@ -154,6 +154,7 @@
           <!-- Join Queue Form -->
           <div 
             v-if="isJoinQueueOpen" 
+            id="join-queue-form"
             class="bg-white rounded border shadow-md overflow-hidden transition-all duration-300 ease-in-out"
           >
             <div class="p-4 sm:p-6 border-b bg-blue-50">

@@ -8,9 +8,7 @@
 </head>
 <body>
     <div id="app">
-        <ContactUs></ContactUs>
+        <contact-us></contact-us>
     </div>
 </body>
 </html>
-
-//create contactus and grooming vue components

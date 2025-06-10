@@ -7,6 +7,8 @@
 /storage/pail
 /vendor
 .env
+.env.deploy
+deploy.sh
 .env.backup
 .env.production
 .phpactor.json
@@ -21,3 +23,9 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Deployment credentials
+.env.deploy
+
+# Deployment credentials
+.env.deploy
