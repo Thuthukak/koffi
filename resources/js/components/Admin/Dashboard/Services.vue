@@ -47,6 +47,7 @@
         <table class="table table-hover border">
           <thead class="table-light">
             <tr>
+              <th>Photo</th>
               <th>Name</th>
               <th>Description</th>
               <th>Price</th>
@@ -56,6 +57,20 @@
           </thead>
           <tbody>
             <tr v-for="service in filteredServices" :key="service.id" class="align-middle">
+              <td>
+                <div class="service-photo-sm">
+                  <img 
+                    v-if="service.photo" 
+                    :src="service.photo" 
+                    :alt="service.name"
+                    class="rounded"
+                    @error="handleImageError"
+                  >
+                  <div v-else class="no-photo-placeholder rounded d-flex align-items-center justify-content-center">
+                    <i class="bi bi-image text-muted"></i>
+                  </div>
+                </div>
+              </td>
               <td class="fw-medium">{{ service.name }}</td>
               <td>
                 <span :title="service.description">
@@ -94,29 +109,48 @@
         <div class="col-12" v-for="service in filteredServices" :key="service.id">
           <div class="card service-card">
             <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <h5 class="card-title mb-0 text-truncate me-2">{{ service.name }}</h5>
-                <div class="btn-group flex-shrink-0">
-                  <button 
-                    class="btn btn-outline-primary btn-sm" 
-                    @click="openEditModal(service)"
-                    title="Edit service"
+              <div class="d-flex mb-3">
+                <!-- Service Photo -->
+                <div class="service-photo-card me-3 flex-shrink-0">
+                  <img 
+                    v-if="service.photo" 
+                    :src="service.photo" 
+                    :alt="service.name"
+                    class="rounded"
+                    @error="handleImageError"
                   >
-                    <i class="bi bi-pencil-square"></i>
-                  </button>
-                  <button 
-                    class="btn btn-outline-danger btn-sm" 
-                    @click="openDeleteModal(service)"
-                    title="Delete service"
-                  >
-                    <i class="bi bi-trash"></i>
-                  </button>
+                  <div v-else class="no-photo-placeholder rounded d-flex align-items-center justify-content-center">
+                    <i class="bi bi-image text-muted"></i>
+                  </div>
+                </div>
+                
+                <!-- Service Info -->
+                <div class="flex-grow-1 min-width-0">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title mb-0 text-truncate me-2">{{ service.name }}</h5>
+                    <div class="btn-group flex-shrink-0">
+                      <button 
+                        class="btn btn-outline-primary btn-sm" 
+                        @click="openEditModal(service)"
+                        title="Edit service"
+                      >
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button 
+                        class="btn btn-outline-danger btn-sm" 
+                        @click="openDeleteModal(service)"
+                        title="Delete service"
+                      >
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <p class="card-text text-muted mb-3" :title="service.description">
+                    {{ truncateText(service.description, 120) }}
+                  </p>
                 </div>
               </div>
-              
-              <p class="card-text text-muted mb-3" :title="service.description">
-                {{ truncateText(service.description, 120) }}
-              </p>
               
               <div class="row g-2">
                 <div class="col-6">
@@ -146,7 +180,7 @@
 
     <!-- Add/Edit Modal -->
     <div class="modal fade " id="serviceModal" tabindex="-1" ref="serviceModal">
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">{{ isEditing ? 'Edit Service' : 'Add New Service' }}</h5>
@@ -154,6 +188,72 @@
           </div>
           <div class="modal-body">
             <form @submit.prevent="submitForm">
+              <!-- Photo Upload Section -->
+              <div class="mb-4">
+                <label class="form-label">Service Photo</label>
+                <div class="photo-upload-section">
+                  <!-- Current Photo Preview -->
+                  <div class="current-photo mb-3" v-if="photoPreview || (isEditing && formData.photo)">
+                    <div class="photo-preview-container">
+                      <img 
+                        :src="photoPreview || formData.photo" 
+                        alt="Service photo preview"
+                        class="rounded"
+                      >
+                      <button 
+                        type="button" 
+                        class="btn btn-danger btn-sm remove-photo-btn"
+                        @click="removePhoto"
+                        title="Remove photo"
+                      >
+                        <i class="bi bi-x"></i>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <!-- File Upload -->
+                  <div class="photo-upload-area" v-if="!photoPreview && !(isEditing && formData.photo)">
+                    <input 
+                      type="file" 
+                      ref="photoInput"
+                      @change="handlePhotoUpload"
+                      accept="image/*"
+                      class="d-none"
+                    >
+                    <div 
+                      class="upload-placeholder rounded border-2 border-dashed p-4 text-center"
+                      @click="$refs.photoInput.click()"
+                      @dragover.prevent
+                      @drop.prevent="handlePhotoDrop"
+                    >
+                      <i class="bi bi-cloud-upload display-6 text-muted mb-2"></i>
+                      <p class="mb-2">Click to upload or drag and drop</p>
+                      <small class="text-muted">PNG, JPG, GIF up to 5MB</small>
+                    </div>
+                  </div>
+                  
+                  <!-- Change Photo Button -->
+                  <div v-if="photoPreview || (isEditing && formData.photo)" class="mt-2">
+                    <button 
+                      type="button" 
+                      class="btn btn-outline-secondary btn-sm"
+                      @click="$refs.photoInput.click()"
+                    >
+                      <i class="bi bi-camera me-1"></i> Change Photo
+                    </button>
+                    <input 
+                      type="file" 
+                      ref="photoInput"
+                      @change="handlePhotoUpload"
+                      accept="image/*"
+                      class="d-none"
+                    >
+                  </div>
+                  
+                  <div v-if="errors.photo" class="text-danger mt-2">{{ errors.photo }}</div>
+                </div>
+              </div>
+
               <div class="mb-3">
                 <label for="serviceName" class="form-label">Service Name</label>
                 <input
@@ -283,17 +383,21 @@ export default {
       toast: null,
       toastMessage: "",
       toastClass: "bg-success",
+      photoPreview: null,
+      photoFile: null,
       formData: {
         name: "",
         description: "",
         price: "",
-        duration: ""
+        duration: "",
+        photo: ""
       },
       errors: {
         name: "",
         description: "",
         price: "",
-        duration: ""
+        duration: "",
+        photo: ""
       }
     };
   },
@@ -343,6 +447,59 @@ export default {
         : text;
     },
 
+    handleImageError(event) {
+      // Replace broken image with placeholder
+      event.target.style.display = 'none';
+      event.target.nextElementSibling.style.display = 'flex';
+    },
+
+    handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.processPhotoFile(file);
+      }
+    },
+
+    handlePhotoDrop(event) {
+      const files = event.dataTransfer.files;
+      if (files.length > 0) {
+        this.processPhotoFile(files[0]);
+      }
+    },
+
+    processPhotoFile(file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        this.errors.photo = 'Please select a valid image file';
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        this.errors.photo = 'Image size must be less than 5MB';
+        return;
+      }
+
+      this.errors.photo = '';
+      this.photoFile = file;
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.photoPreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+
+    removePhoto() {
+      this.photoPreview = null;
+      this.photoFile = null;
+      this.formData.photo = "";
+      if (this.$refs.photoInput) {
+        this.$refs.photoInput.value = '';
+      }
+    },
+
     openAddModal() {
       this.isEditing = false;
       this.resetForm();
@@ -355,6 +512,8 @@ export default {
     openEditModal(service) {
       this.isEditing = true;
       this.formData = { ...service };
+      this.photoPreview = null;
+      this.photoFile = null;
       if (!this.serviceModal) {
         this.serviceModal = new Modal(this.$refs.serviceModal);
       }
@@ -388,14 +547,21 @@ export default {
         name: "",
         description: "",
         price: "",
-        duration: ""
+        duration: "",
+        photo: ""
       };
       this.errors = {
         name: "",
         description: "",
         price: "",
-        duration: ""
+        duration: "",
+        photo: ""
       };
+      this.photoPreview = null;
+      this.photoFile = null;
+      if (this.$refs.photoInput) {
+        this.$refs.photoInput.value = '';
+      }
     },
 
     async submitForm() {
@@ -404,7 +570,8 @@ export default {
         name: "",
         description: "",
         price: "",
-        duration: ""
+        duration: "",
+        photo: ""
       };
 
       // Basic validation
@@ -457,7 +624,21 @@ export default {
     },
 
     async createService() {
-      const response = await axios.post("/api/services", this.formData);
+      const formData = new FormData();
+      formData.append('name', this.formData.name);
+      formData.append('description', this.formData.description);
+      formData.append('price', this.formData.price);
+      formData.append('duration', this.formData.duration);
+      
+      if (this.photoFile) {
+        formData.append('photo', this.photoFile);
+      }
+
+      const response = await axios.post("/api/services", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       
       // Add the new service to the list
       this.services.push(response.data.service);
@@ -469,7 +650,22 @@ export default {
     },
 
     async updateService() {
-      const response = await axios.put(`/api/services/${this.formData.id}`, this.formData);
+      const formData = new FormData();
+      formData.append('name', this.formData.name);
+      formData.append('description', this.formData.description);
+      formData.append('price', this.formData.price);
+      formData.append('duration', this.formData.duration);
+      formData.append('_method', 'PUT');
+      
+      if (this.photoFile) {
+        formData.append('photo', this.photoFile);
+      }
+
+      const response = await axios.post(`/api/services/${this.formData.id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       
       // Update the service in the list
       const index = this.services.findIndex(service => service.id === this.formData.id);
@@ -562,6 +758,74 @@ export default {
   line-height: 1.4;
 }
 
+/* Photo styling */
+.service-photo-sm {
+  width: 60px;
+  height: 60px;
+}
+
+.service-photo-card {
+  width: 80px;
+  height: 80px;
+}
+
+.service-photo-sm img,
+.service-photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
+
+/* Photo upload styles */
+.photo-upload-section {
+  max-width: 400px;
+}
+
+.photo-preview-container {
+  position: relative;
+  display: inline-block;
+  max-width: 200px;
+}
+
+.photo-preview-container img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.remove-photo-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.upload-placeholder {
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: #f8f9fa;
+  border-color: #dee2e6 !important;
+}
+
+.upload-placeholder:hover {
+  background-color: #e9ecef;
+  border-color: #0d6efd !important;
+}
+
 /* Mobile modal improvements */
 @media (max-width: 576px) {
   .modal-dialog {
@@ -574,6 +838,10 @@ export default {
   
   .btn-group .btn {
     padding: 0.25rem 0.5rem;
+  }
+  
+  .photo-upload-section {
+    max-width: 100%;
   }
 }
 
@@ -595,5 +863,9 @@ export default {
   .btn-group .btn:last-child {
     margin-bottom: 0;
   }
+}
+
+.min-width-0 {
+  min-width: 0;
 }
 </style>

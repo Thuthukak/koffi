@@ -31,7 +31,7 @@
                     >
                         <div class="service-image">
                             <img 
-                                :src="getServiceImage(service.name)" 
+                                :src="getServiceImage(service)"
                                 :alt="service.name"
                                 loading="lazy"
                             />
@@ -58,7 +58,7 @@
                 <button class="modal-close" @click="closeModal">&times;</button>
                 <div class="modal-image">
                     <img 
-                        :src="getServiceImage(selectedService.name)" 
+                        :src="selectedService ? getServiceImage(selectedService) : ''"
                         :alt="selectedService.name"
                     />
                 </div>
@@ -121,9 +121,18 @@ export default {
                 this.loading = false;
             }
         },
-        getServiceImage(serviceName) {
-            // For now, return placeholder images based on service type
-            // Replace with actual image URLs when you add the image column to your database
+        getServiceImage(service) {
+            // Safety check for undefined service
+            if (!service) {
+                return 'https://images.unsplash.com/photo-1622286346003-c8b3a7a6e6c1?w=400&h=300&fit=crop';
+            }
+            
+            // Use the actual photo from the database if available
+            if (service.photo && service.photo.trim() !== '') {
+                return service.photo;
+            }
+            
+            // Fallback to placeholder images based on service name
             const imageMap = {
                 'Standard Haircut': 'https://images.unsplash.com/photo-1622286346003-c8b3a7a6e6c1?w=400&h=300&fit=crop',
                 'Beard Trim': 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&h=300&fit=crop',
@@ -134,7 +143,8 @@ export default {
                 'Taper Fade': 'https://images.unsplash.com/photo-1622902046580-2b47f47f5471?w=400&h=300&fit=crop'
             };
             
-            return imageMap[serviceName] || 'https://images.unsplash.com/photo-1622286346003-c8b3a7a6e6c1?w=400&h=300&fit=crop';
+            // Return service-specific placeholder or default placeholder
+            return imageMap[service.name] || 'https://images.unsplash.com/photo-1622286346003-c8b3a7a6e6c1?w=400&h=300&fit=crop';
         },
         selectService(service) {
             this.selectedService = service;
