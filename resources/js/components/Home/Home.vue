@@ -4,7 +4,7 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
       <div class="hero-content">
-        <h1>KOFI BARBER SHOP</h1>
+        <h1>TOM BARBER SHOP</h1>
         <p>Where Style Meets Culture - Premium Cuts for the Community</p>
         <button class="cta-button"><a style="text-decoration: none; color: #fff;" href="/bookings">Book Your Cut</a></button>
         <!-- <button class="cta-button" @click="openBookingModal">Book Your Cut</button> -->
@@ -54,8 +54,8 @@
       <div class="container">
         <div class="about-content">
           <div class="about-text">
-            <h2 class="fw-bold">About Kofi Cuts</h2>
-            <p>Founded in 2008, Kofi Barber Shop has been serving the community with pride, skill, and dedication. We're more than just a barbershop - we're a cornerstone of the neighborhood where culture, conversation, and craftsmanship come together.</p>
+            <h2 class="fw-bold">About Tom Cuts</h2>
+            <p>Founded in 2008, Tom Barber Shop has been serving the community with pride, skill, and dedication. We're more than just a barbershop - we're a cornerstone of the neighborhood where culture, conversation, and craftsmanship come together.</p>
             <p>Our team of master barbers brings decades of combined experience, specializing in cuts that celebrate and enhance the natural beauty of our clients. From classic styles to the latest trends, we ensure every customer leaves looking and feeling their absolute best.</p>
             <p>We believe in building relationships, not just cutting hair. Step into our shop and become part of the family.</p>
           </div>
@@ -118,7 +118,7 @@
               <i class="fas fa-phone"></i>
               Call (555) 123-CUTS
             </a>
-            <a href="mailto:info@kofi.co.za" class="booking-btn">
+            <a href="mailto:info@tom.co.za" class="booking-btn">
               <i class="fas fa-envelope"></i>
               Email Us
             </a>
@@ -212,7 +212,7 @@ export default {
       {
         id: 3,
         icon: 'fas fa-envelope',
-        content: '<strong>Email</strong><br>info@kofi.co.za'
+        content: '<strong>Email</strong><br>info@tom.co.za'
       },
       {
         id: 4,
