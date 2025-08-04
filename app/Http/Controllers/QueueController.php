@@ -165,6 +165,8 @@ class QueueController extends Controller
         }
     }
 
+    
+
     /**
      * Remove/Cancel a client from the queue (soft delete)
      */
