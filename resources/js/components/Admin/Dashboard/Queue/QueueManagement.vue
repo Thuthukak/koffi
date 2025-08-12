@@ -74,6 +74,7 @@
         :showPositionControls="true"
         :showEditButton="true"
         @removeClient="removeClient"
+        @jumpClient="jumpClient"
        
         
       />
@@ -457,6 +458,42 @@ export default {
       }
     };
 
+    // New jump client function
+    const jumpClient = async (id) => {
+      try {
+        console.log("Jumping client with ID:", id);
+        
+        // Show confirmation dialog
+        if (!confirm('Are you sure you want to move this client one position down in the queue?')) {
+          return;
+        }
+        
+        const response = await axios.post(`/api/queue/jump/${id}`);
+        console.log("Jump client response:", response.data);
+        
+        // Show appropriate message based on the action taken
+        if (response.data.action === 'removed') {
+          alert('Client has been removed from the queue after reaching the maximum jump limit (3 times).');
+        } else if (response.data.action === 'jumped') {
+          const remainingJumps = response.data.remaining_jumps;
+          alert(`Client moved one position down. ${remainingJumps} jumps remaining before removal.`);
+        }
+        
+        // Refresh the queue
+        await fetchQueue();
+      } catch (error) {
+        console.error("Error jumping client:", error);
+        
+        // Show error message to user
+        let errorMessage = "Failed to jump client in queue.";
+        if (error.response && error.response.data && error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+        
+        alert(errorMessage);
+      }
+    };
+
     // Updated remove client function (previously skipClient)
     const removeClient = async (id) => {
       try {
@@ -633,6 +670,7 @@ export default {
       calculateElapsedMinutes,
       startQueue,
       nextClient,
+      jumpClient, // New jump function
       removeClient, // Updated function name
       openAddClientModal,
       closeAddClientModal,

@@ -166,6 +166,30 @@
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center gap-2">
                 <button 
+                  @click="$emit('jumpClient', client.id)"
+                  class="px-3 py-1 bg-yellow-500 text-white text-sm rounded hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  :disabled="client.skipCount >= 3"
+                  :title="client.skipCount >= 3 ? 'Client has reached maximum jump limit' : `Jump client (${3 - client.skipCount} jumps remaining)`"
+                >
+                  <span class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                    </svg>
+                    Jump
+                    <span v-if="client.skipCount > 0" class="text-xs">
+                      ({{ 3 - client.skipCount }})
+                    </span>
+                  </span>
+                </button>
+                <div v-if="client.skipCount > 0" class="mt-1">
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800">
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.728-.833-2.498 0L3.316 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                    </svg>
+                    Jumped {{ client.skipCount }} time{{ client.skipCount > 1 ? 's' : '' }}
+                  </span>
+                </div>
+                <button 
                   v-if="showEditButton"
                   @click="$emit('editClient', client)" 
                   class="inline-flex items-center px-3 py-1 border border-gray-300 text-sm leading-4 font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
@@ -213,24 +237,24 @@ export default {
       type: String,
       default: 'Add walk-in clients or wait for bookings to appear here.'
     },
-    // showBarberColumn: {
-    //   type: Boolean,
-    //   default: false
-    // },
+    showBarberColumn: {
+      type: Boolean,
+      default: false
+    },
     showPositionControls: {
       type: Boolean,
       default: false
     },
-    // showEditButton: {
-    //   type: Boolean,
-    //   default: false
-    // },
+    showEditButton: {
+      type: Boolean,
+      default: false
+    },
     confirmRemove: {
       type: Boolean,
       default: true
     }
   },
-  emits: ['removeClient', 'editClient', 'moveClient'],
+  emits: ['removeClient', 'editClient', 'moveClient','jumpClient'],
   setup(props, { emit }) {
     // Helper function to format time
     const formatTime = (minutes) => {
