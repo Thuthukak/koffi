@@ -55,9 +55,9 @@
       <div v-if="isMobileMenuOpen" class="md:hidden bg-white border-t border-gray-200">
         <div class="py-2 space-y-1">
           <a href="/" class="mobile-nav-item">Home</a>
-          <a href="/bookings" class="nav-item">Bookings</a>
-          <a href="/grooming" class="nav-item">Grooming</a>
-          <a href="/#contact" class="nav-item">Contact Us</a>
+          <a href="/bookings" class="mobile-nav-item">Bookings</a>
+          <a href="/grooming" class="mobile-nav-item">Grooming</a>
+          <a href="/#contact" class="mobile-nav-item">Contact Us</a>
         </div>
       </div>
     </div>
