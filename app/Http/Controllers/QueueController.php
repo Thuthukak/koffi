@@ -196,7 +196,7 @@ class QueueController extends Controller
         
         // Swap the created_at timestamps to change queue order
         // We'll use a temporary timestamp to avoid conflicts
-        $tempTimestamp = now()->addYears(100); // Far future timestamp
+        $tempTimestamp = now()->addYears(10); // Far future timestamp
         $jumpedCreatedAt = $bookingToJump->created_at;
         $nextCreatedAt = $nextBooking->created_at;
         
