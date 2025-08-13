@@ -52,231 +52,33 @@
       </div>
       
       <!-- Current Client Card -->
-      <div v-if="currentClient" class="bg-white rounded-xl shadow-sm border overflow-hidden">
-        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-4 sm:px-6 py-4">
-          <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-            </svg>
-            Currently Serving
-          </h2>
-        </div>
-        
-        <div class="p-4 sm:p-6">
-          <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
-            <div class="space-y-2 flex-1">
-              <h3 class="text-xl sm:text-2xl font-bold text-gray-900">{{ currentClient.client.name }}</h3>
-              <div class="space-y-1">
-                <p class="text-sm sm:text-base text-gray-700 flex items-center gap-2">
-                  <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v4a2 2 0 002 2h2m0 0h10a2 2 0 002-2V7a2 2 0 00-2-2H9m0 0V3"/>
-                  </svg>
-                  {{ currentClient.service.name }} ({{ currentClient.service.duration }} mins)
-                </p>
-                <p class="text-xs sm:text-sm text-gray-500 flex items-center gap-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
-                  </svg>
-                  Ref: {{ currentClient.reference }}
-                </p>
-                <p class="text-xs sm:text-sm text-gray-500 flex items-center gap-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                  </svg>
-                  Started: {{ formatDateTime(currentClient.start_time) }}
-                </p>
-              </div>
-            </div>
-            
-            <div class="lg:text-right">
-              <div v-if="currentClientStatus.isOvertime" 
-                   class="inline-flex items-center gap-2 px-3 py-2 bg-red-100 text-red-800 rounded border border-red-200">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <div>
-                  <p class="text-xs font-medium">OVERTIME</p>
-                  <p class="text-lg font-bold">{{ formatTime(currentClientStatus.timeDifference) }}</p>
-                </div>
-              </div>
-              <div v-else 
-                   class="inline-flex items-center gap-2 px-3 py-2 bg-green-100 text-green-800 rounded border border-green-200">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <div>
-                  <p class="text-xs font-medium">REMAINING</p>
-                  <p class="text-lg font-bold">{{ formatTime(currentClientStatus.timeDifference) }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <CurrentlyServingCard 
+        :currentClient="currentClient"
+        :currentClientStatus="currentClientStatus"
+        :showProgressBar="true"
+      />
       
       <!-- Queue Statistics -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-white rounded-xl shadow-sm border p-4 sm:p-6">
-          <div class="flex items-center gap-3">
-            <div class="p-3 bg-blue-100 rounded">
-              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-              </svg>
-            </div>
-            <div>
-              <p class="text-2xl sm:text-3xl font-bold text-gray-900">{{ waitingClients.length }}</p>
-              <p class="text-xs sm:text-sm text-gray-600 font-medium">In Queue</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-white rounded-xl shadow-sm border p-4 sm:p-6">
-          <div class="flex items-center gap-3">
-            <div class="p-3 bg-green-100 rounded">
-              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <div>
-              <p class="text-2xl sm:text-3xl font-bold text-gray-900">{{ averageServiceTime }}</p>
-              <p class="text-xs sm:text-sm text-gray-600 font-medium">Avg Time (min)</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-white rounded-xl shadow-sm border p-4 sm:p-6 sm:col-span-1">
-          <div class="flex items-center gap-3">
-            <div class="p-3 bg-indigo-100 rounded">
-              <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
-            </div>
-            <div>
-              <p class="text-lg sm:text-xl font-bold text-gray-900">{{ totalQueueTime }}</p>
-              <p class="text-xs sm:text-sm text-gray-600 font-medium">Total Queue Time</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <QueueStats 
+        :queueCount="waitingClients.length"
+        :averageServiceTime="averageServiceTime"
+        :totalQueueTime="totalQueueTime"
+        :showAdditionalStats="true"
+      />
       
       <!-- Waiting List - Mobile Optimized -->
-      <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
-        <div class="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <h2 class="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h2m0 0h2m0 0h2a2 2 0 002-2V7a2 2 0 00-2-2h-2m0 0V3m0 2v2"/>
-            </svg>
-            Waiting List
-            <span v-if="waitingClients.length > 0" class="ml-auto bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
-              {{ waitingClients.length }}
-            </span>
-          </h2>
-        </div>
+       <WaitingList 
+        :waitingClients="waitingClientsWithTimes"
+        title="Current Queue"
+        :showBarberColumn="false"
+        :showPositionControls="true"
+        :showEditButton="false"
+        @removeClient="removeClient"
+        @jumpClient="jumpClient"
+       
         
-        <div v-if="waitingClients.length === 0" class="p-8 sm:p-12 text-center">
-          <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-          </svg>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">No clients in queue</h3>
-          <p class="text-gray-500">Add walk-in clients or wait for bookings to appear here.</p>
-        </div>
-        
-        <!-- Mobile Cards View (shown on mobile) -->
-        <div class="block lg:hidden">
-          <div v-for="(client, index) in waitingClientsWithTimes" :key="client.id" 
-               class="border-b border-gray-100 last:border-b-0">
-            <div class="p-4 space-y-3">
-              <div class="flex items-start justify-between">
-                <div class="flex items-center gap-3">
-                  <div class="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-sm font-bold">
-                    {{ index + 1 }}
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-gray-900 text-base">{{ client.client.name }}</h3>
-                    <p class="text-sm text-gray-600">{{ client.service.name }}</p>
-                  </div>
-                </div>
-                <button 
-                  @click="removeClient(client.id)" 
-                  class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
-                  title="Remove client"
-                >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                  </svg>
-                </button>
-              </div>
-              
-              <div class="flex items-center justify-between text-sm">
-                <div class="flex items-center gap-4">
-                  <span class="inline-flex items-center gap-1 text-gray-600">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    {{ formatTime(client.waitTime) }}
-                  </span>
-                  <span class="text-gray-400">•</span>
-                  <span class="text-gray-600">{{ client.service.duration }}min</span>
-                </div>
-                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                  {{ client.reference }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Desktop Table View (hidden on mobile) -->
-        <div class="hidden lg:block overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Wait Time</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="(client, index) in waitingClientsWithTimes" :key="client.id" class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="w-8 h-8 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-sm font-bold">
-                    {{ index + 1 }}
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="font-medium text-gray-900">{{ client.client.name }}</div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-gray-900">{{ client.service.name }}</div>
-                  <div class="text-sm text-gray-500">{{ client.service.duration }} minutes</div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                    {{ formatTime(client.waitTime) }}
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ client.reference }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <button 
-                    @click="removeClient(client.id)" 
-                    class="inline-flex items-center px-3 py-1 border border-red-300 text-sm leading-4 font-medium rounded text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
-                  >
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      />
+      
     </div>
     
     <!-- Add Walk-in Client Modal -->
@@ -357,8 +159,17 @@
 <script>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import axios from 'axios';
+import CurrentlyServingCard from './CurrentlyServingCard.vue';
+import QueueStats from './QueueStats.vue';
+import WaitingList from './WaitingList.vue';
+
 
 export default {
+  components: {
+    CurrentlyServingCard,
+    QueueStats,
+    WaitingList
+  },
   setup() {
     // State variables 
     const currentClient = ref(null);
@@ -647,6 +458,42 @@ export default {
       }
     };
 
+    // New jump client function
+    const jumpClient = async (id) => {
+      try {
+        console.log("Jumping client with ID:", id);
+        
+        // Show confirmation dialog
+        if (!confirm('Are you sure you want to move this client one position down in the queue?')) {
+          return;
+        }
+        
+        const response = await axios.post(`/api/queue/jump/${id}`);
+        console.log("Jump client response:", response.data);
+        
+        // Show appropriate message based on the action taken
+        if (response.data.action === 'removed') {
+          alert('Client has been removed from the queue after reaching the maximum jump limit (3 times).');
+        } else if (response.data.action === 'jumped') {
+          const remainingJumps = response.data.remaining_jumps;
+          alert(`Client moved one position down. ${remainingJumps} jumps remaining before removal.`);
+        }
+        
+        // Refresh the queue
+        await fetchQueue();
+      } catch (error) {
+        console.error("Error jumping client:", error);
+        
+        // Show error message to user
+        let errorMessage = "Failed to jump client in queue.";
+        if (error.response && error.response.data && error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+        
+        alert(errorMessage);
+      }
+    };
+
     // Updated remove client function (previously skipClient)
     const removeClient = async (id) => {
       try {
@@ -823,6 +670,7 @@ export default {
       calculateElapsedMinutes,
       startQueue,
       nextClient,
+      jumpClient, // New jump function
       removeClient, // Updated function name
       openAddClientModal,
       closeAddClientModal,

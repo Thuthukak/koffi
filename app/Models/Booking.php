@@ -17,10 +17,12 @@ class Booking extends Model
         'bookingSlot',
         'status',
         'skipCount',
+        'skipped_at',
         'start_time',
         'end_time',
         'actual_duration',
-        'notified'
+        'notified',
+        'created_at',
     ];
     protected $casts = [
         'bookingSlot' => 'datetime',
