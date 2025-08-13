@@ -4,7 +4,7 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
       <div class="hero-content">
-        <h1>TOM BARBER SHOP</h1>
+        <h1>KOFI BARBER SHOP</h1>
         <p>Where Style Meets Culture - Premium Cuts for the Community</p>
         <button class="cta-button"><a style="text-decoration: none; color: #fff;" href="/bookings">Book Your Cut</a></button>
         <!-- <button class="cta-button" @click="openBookingModal">Book Your Cut</button> -->
