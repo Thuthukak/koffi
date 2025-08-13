@@ -70,9 +70,9 @@
        <WaitingList 
         :waitingClients="waitingClientsWithTimes"
         title="Current Queue"
-        :showBarberColumn="true"
+        :showBarberColumn="false"
         :showPositionControls="true"
-        :showEditButton="true"
+        :showEditButton="false"
         @removeClient="removeClient"
         @jumpClient="jumpClient"
        
