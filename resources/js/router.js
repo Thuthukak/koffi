@@ -4,7 +4,7 @@ import AdminBookings from './components/Admin/Dashboard/AdminBookings.vue';
 import Profile from './components/Admin/Dashboard/Profile/Profile.vue';
 import Settings from './components/Admin/Dashboard/Settings/Settings.vue';
 import Services from './components/Admin/Dashboard/Services.vue';
-import QueueManagement from './components/Admin/Dashboard/QueueManagement.vue';
+import QueueManagement from './components/Admin/Dashboard/Queue/QueueManagement.vue';
 // import QueueStats from './components/Admin/Dashboard/QueueStats.vue';
 
 

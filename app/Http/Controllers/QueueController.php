@@ -138,6 +138,107 @@ class QueueController extends Controller
         ]);
     }
     
+    /**
+     * Jump a client one position down in the queue
+     * If they've jumped 3 times, they get skipped (removed from queue)
+     */
+    public function jumpClient($id)
+    {
+        Log::info('Jump client method called', ['booking_id' => $id]);
+        
+        // Find the booking to jump
+        $bookingToJump = Booking::find($id);
+        
+        if (!$bookingToJump) {
+            return response()->json(['message' => 'Booking not found'], 404);
+        }
+        
+        // Only allow jumping of queued bookings (not in-progress or completed)
+        if ($bookingToJump->status !== 'queued') {
+            return response()->json(['message' => 'Can only jump clients that are waiting in queue'], 400);
+        }
+        
+        // Check if this would be their 3rd jump (remove them before jumping)
+        if ($bookingToJump->skipCount >= 2) { // Changed from >= 3 to >= 2
+            // Remove them from the queue completely
+            $bookingToJump->update([
+                'status' => 'no-show',
+                'skipped_at' => now(),
+                'skipCount' => $bookingToJump->skipCount + 1 // Increment to 3
+            ]);
+            
+            Log::info('Client removed from queue after 3 jumps', [
+                'booking_id' => $bookingToJump->id,
+                'client_name' => $bookingToJump->client->name,
+                'skip_count' => $bookingToJump->skipCount,
+                'skipped_at' => $bookingToJump->skipped_at
+            ]);
+            
+            // Broadcast queue update
+            broadcast(new QueueUpdated())->toOthers();
+            
+            return response()->json([
+                'message' => 'Client has been removed from queue after reaching maximum jump limit (3)',
+                'booking_id' => $bookingToJump->id,
+                'action' => 'removed'
+            ]);
+        }
+        
+        // Find the next booking in the queue (the one that will move ahead)
+        $nextBooking = Booking::where('status', 'queued')
+            ->where('created_at', '>', $bookingToJump->created_at)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        
+        if (!$nextBooking) {
+            return response()->json(['message' => 'No one behind this client to swap with'], 400);
+        }
+        
+        // Swap the created_at timestamps to change queue order
+        // We'll use a temporary timestamp to avoid conflicts
+        $tempTimestamp = now()->addYears(10); // Far future timestamp
+        $jumpedCreatedAt = $bookingToJump->created_at;
+        $nextCreatedAt = $nextBooking->created_at;
+        
+        // Update the booking that's jumping (moving down one position)
+        $bookingToJump->update([
+            'created_at' => $tempTimestamp,
+            'skipCount' => $bookingToJump->skipCount + 1,
+            'skipped_at' => now()
+        ]);
+        
+        // Update the next booking (moving up one position)
+        $nextBooking->update([
+            'created_at' => $jumpedCreatedAt
+        ]);
+        
+        // Finally update the jumped booking with the next position
+        $bookingToJump->update([
+            'created_at' => $nextCreatedAt
+        ]);
+        
+        Log::info('Client jumped one position', [
+            'jumped_booking_id' => $bookingToJump->id,
+            'jumped_client_name' => $bookingToJump->client->name,
+            'next_booking_id' => $nextBooking->id,
+            'next_client_name' => $nextBooking->client->name,
+            'skip_count' => $bookingToJump->skipCount
+        ]);
+        
+        // Broadcast queue update
+        broadcast(new QueueUpdated())->toOthers();
+        
+        $remainingJumps = 3 - $bookingToJump->skipCount;
+        
+        return response()->json([
+            'message' => "Client jumped one position down. {$remainingJumps} jumps remaining before removal.",
+            'booking_id' => $bookingToJump->id,
+            'skip_count' => $bookingToJump->skipCount,
+            'remaining_jumps' => $remainingJumps,
+            'action' => 'jumped'
+        ]);
+    }
+    
     private function notifyNextClient()
     {
         // Find the next client in queue
@@ -182,12 +283,8 @@ class QueueController extends Controller
             return response()->json(['message' => 'Can only remove clients that are waiting in queue'], 400);
         }
         
-        // Soft delete the booking
-        // $booking->delete();
-        
         // Update the booking status
-        $booking->update(['status' => 'skipped']);
-        
+        $booking->update(['status' => 'cancelled']);
         
         // Log the removal for audit purposes
         Log::info('Booking removed from queue', [

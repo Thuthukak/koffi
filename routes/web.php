@@ -78,6 +78,7 @@ Route::prefix('api')->group(function () {
     Route::post('/queue/start', [QueueController::class, 'startQueue']);
     Route::post('/queue/next', [QueueController::class, 'nextClient']);
     Route::post('/queue/skip/{id}', [QueueController::class, 'skipClient']);
+    Route::post('/queue/jump/{id}', [QueueController::class, 'jumpClient']);
     Route::delete('/queue/remove/{id}', [QueueController::class, 'removeClient']);
     Route::post('/queue/add-walkin', [QueueController::class, 'addWalkinClient']);
     Route::get('/bookings/completed-today', [QueueController::class, 'getCompletedBookingsToday']);
