@@ -41,12 +41,15 @@ Before you begin, ensure you have the following installed:
 - **MySQL 8.0+**
 - **Git**
 
+## Screenshots
+![Public queue](/public/assets/images/screenshots/publicqueue.png)
+
 ## 🚀 Installation
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/kofi-barbershop.git
+git clone https://github.com/Thuthukak/kofi-barbershop.git
 cd kofi-barbershop
 ```
 
@@ -133,14 +136,6 @@ MAIL_PORT=587
 MAIL_USERNAME=your_email
 MAIL_PASSWORD=your_password
 
-# SMS Configuration (optional)
-TWILIO_SID=your_twilio_sid
-TWILIO_AUTH_TOKEN=your_twilio_token
-TWILIO_PHONE_NUMBER=your_twilio_number
-
-# Payment Gateway (optional)
-STRIPE_KEY=your_stripe_key
-STRIPE_SECRET=your_stripe_secret
 ```
 
 ### Database Setup
@@ -322,7 +317,7 @@ The application is fully responsive and works seamlessly on:
 For support and questions:
 - Email: support@kofibarbershop.com
 - Phone: +1 (555) 123-4567
-- GitHub Issues: [Create an issue](https://github.com/your-username/kofi-barbershop/issues)
+- GitHub Issues: [Create an issue](https://github.com/Thuthukak/kofi-barbershop/issues)
 
 ## 📄 License
 
