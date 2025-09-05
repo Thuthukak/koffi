@@ -42,7 +42,21 @@ Before you begin, ensure you have the following installed:
 - **Git**
 
 ## Screenshots
+
+## Public Queue
 ![Public queue](/public/assets/images/screenshots/publicqueue.png)
+
+## Dashboard
+![Dashboard](/public/assets/images/screenshots/dashboard.png)
+
+## Queue Management
+![Queue Management](/public/assets/images/screenshots/queue.png)
+
+## Bookings
+![Bookings](/public/assets/images/screenshots/bookings.png)
+
+## Services
+![Services](/public/assets/images/screenshots/services.png)
 
 ## 🚀 Installation
 
